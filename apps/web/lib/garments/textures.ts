@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import type { Product } from "../catalog";
 import { drawGarment, DH, DW } from "./draw";
-import { drawDrape } from "./drape";
+import { drawCurtain, drawDrape } from "./drape";
 import { fabricTile } from "./fabrics";
 import { alphaMask, downscale, heightToNormal, type AlphaMask } from "./normal";
 
@@ -116,3 +116,12 @@ export function drapeTextures(): DrapeTex {
 }
 
 export const GARMENT_ASPECT = DH / DW;
+
+let curtainCache: { map: THREE.CanvasTexture; normal: THREE.CanvasTexture } | null = null;
+
+export function curtainTextures() {
+  if (curtainCache) return curtainCache;
+  const f = drawCurtain(window.innerWidth < 768 ? 640 : 1024, "#27305a");
+  curtainCache = { map: tex(f.color, true), normal: tex(f.normal, false) };
+  return curtainCache;
+}

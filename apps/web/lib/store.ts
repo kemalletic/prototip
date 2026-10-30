@@ -3,7 +3,6 @@
 import { create } from "zustand";
 import type { Category } from "./catalog";
 import type { RegionId } from "./region";
-import type { Tema } from "./theme";
 
 export type Tier = "pending" | "full" | "static";
 
@@ -15,7 +14,6 @@ export interface CartLine {
 
 interface State {
   tier: Tier;
-  tema: Tema;
   ready: boolean;
   region: RegionId;
   sound: boolean;
@@ -36,7 +34,6 @@ interface State {
 
 export const useStore = create<State>((set) => ({
   tier: "pending",
-  tema: "noc",
   ready: false,
   region: "ba",
   sound: false,
@@ -68,6 +65,7 @@ export const useStore = create<State>((set) => ({
  */
 export const live = {
   heroP: 0, // 0..1 koliko je hero odskrolan
+  tourP: 0, // 0..1 napredak šetnje kroz butik
   railP: 0, // 0..1 napredak duž šine
   railActive: 0, // 0..1 koliko je sekcija šine u kadru
   pointer: { x: 0, y: 0, nx: 0, ny: 0, vx: 0, vy: 0, inside: false, t: 0 },

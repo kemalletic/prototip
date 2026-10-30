@@ -6,6 +6,8 @@ export const rig = {
   mode: "home" as "home" | "product",
   focus: null as string | null,
   xs: new Map<string, number>(),
+  fixtureOf: new Map<string, string>(),
+  fixtures: new Map<string, THREE.Object3D>(),
   first: 0,
   last: 0,
 };

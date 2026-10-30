@@ -51,12 +51,11 @@ export function Hero() {
           od tkanine.
         </h1>
         <p className="hero__lede">
-          Farmerke, jakne, džemperi i sve između, krojeno za BiH i region. Dostava u Bosnu i Hercegovinu, Srbiju, Hrvatsku i
-          Crnu Goru.
+          Odjeća za svaki dan, napravljena da traje. Uđi u butik ili naruči s dostavom u BiH, Srbiju, Hrvatsku i Crnu Goru.
         </p>
         {tier === "full" && (
           <p className="hero__hint">
-            {touch ? "Nagni telefon i gledaj kako se denim pomjera." : "Pređi kursorom preko denima."}
+            {touch ? "Nagni telefon i pomjeri denim u izlogu." : "Pređi kursorom preko denima u izlogu."}
             {touch && needsMotion && (
               <button type="button" className="link-quiet ml-2 underline underline-offset-4" onClick={askMotion}>
                 Uključi pokrete
@@ -70,16 +69,15 @@ export function Hero() {
           type="button"
           className="hero__down"
           onClick={() => {
-            const el = document.getElementById("kolekcija");
-            if (el) scrollToY(el.offsetTop);
+            scrollToY(window.innerHeight * 1.4);
           }}
         >
           <span className="hero__down-thread" aria-hidden />
-          Pogledaj kolekciju
+          Uđi u butik
         </button>
         {ambient && tier === "full" && (
           <p className="hero__ambient">
-            Svjetlo prati tvoje doba dana: {ambient.label}
+            Svjetlo u butiku prati tvoje doba dana: {ambient.label}
             {ambient.city ? `, ${ambient.city}` : ""}
           </p>
         )}

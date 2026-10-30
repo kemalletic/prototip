@@ -6,7 +6,7 @@ import { hashString, hex, mix, rng, shade } from "./color";
 
 export const TILE = 256;
 
-export type TileKind = Fabric | "ribtrim" | "denimback" | "lining";
+export type TileKind = Fabric | "ribtrim" | "denimback" | "lining" | "linen";
 
 export interface Tile {
   color: HTMLCanvasElement;
@@ -187,6 +187,17 @@ export function fabricTile(kind: TileKind, color: string): Tile {
       noise(c, 12, r);
       break;
     }
+    case "softshell": {
+      units = 140;
+      for (let i = 0; i < 1800; i++) {
+        c.fillStyle = r() > 0.5 ? shade(color, 0.06, 0.4) : shade(color, -0.08, 0.4);
+        wrapEllipse(c, r() * TILE, r() * TILE, 0.6 + r() * 0.8, 0.6 + r() * 0.8);
+      }
+      h.fillStyle = "#8a8a8a";
+      for (let i = 0; i < 800; i++) wrapEllipse(h, r() * TILE, r() * TILE, 1.2, 1.2);
+      noise(c, 6, r);
+      break;
+    }
     case "nylon": {
       units = 260;
       c.strokeStyle = shade(color, 0.08, 0.06);
@@ -280,6 +291,22 @@ export function fabricTile(kind: TileKind, color: string): Tile {
       }
       h.fillStyle = "#5a5a5a";
       for (let i = 0; i < 900; i++) wrapEllipse(h, r() * TILE, r() * TILE, 1 + r() * 2, 1 + r() * 1.4, r() * 3);
+      noise(c, 10, r);
+      break;
+    }
+    case "linen": {
+      units = 120;
+      for (let i = 0; i < 120; i++) {
+        c.fillStyle = r() > 0.5 ? shade(color, 0.14 + r() * 0.1, 0.35) : shade(color, -0.2 - r() * 0.1, 0.35);
+        wrapRect(c, r() * TILE, 0, 0.5 + r() * 1.8, TILE);
+        c.fillStyle = r() > 0.5 ? shade(color, 0.12, 0.3) : shade(color, -0.18, 0.3);
+        wrapRect(c, 0, r() * TILE, TILE, 0.5 + r() * 1.6);
+      }
+      h.fillStyle = "#a0a0a0";
+      for (let i = 0; i < 90; i++) {
+        wrapRect(h, r() * TILE, 0, 1 + r() * 1.5, TILE);
+        wrapRect(h, 0, r() * TILE, TILE, 1 + r() * 1.5);
+      }
       noise(c, 10, r);
       break;
     }

@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { detectTier } from "@/lib/device-tier";
 import { scroller } from "@/lib/scroll";
 import { live, useStore } from "@/lib/store";
-import { readTema } from "@/lib/theme";
+import { getAmbient } from "@/lib/ambient";
 import { Cart } from "./Cart";
 import { HangTag } from "./HangTag";
 import { Header } from "./Header";
@@ -23,9 +23,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const tier = useStore((s) => s.tier);
 
   useEffect(() => {
-    const tema = readTema();
-    document.documentElement.dataset.tema = tema;
-    useStore.getState().set({ tema });
+    document.documentElement.dataset.faza = getAmbient().phase;
   }, []);
 
   useEffect(() => {

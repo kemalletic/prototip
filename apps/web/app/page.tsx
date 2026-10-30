@@ -1,12 +1,10 @@
-import { Collection } from "@/components/home/Collection";
 import { Footer } from "@/components/home/Footer";
-import { Hero } from "@/components/home/Hero";
+import { Tour } from "@/components/home/Tour";
 
 export default function Home() {
   return (
     <>
-      <Hero />
-      <Collection />
+      <Tour />
       <Footer />
     </>
   );

@@ -1180,6 +1180,372 @@ function belt(P: Painter) {
   }
 }
 
+
+// ------------------------------------------------------------ jakne i prsluci (novi)
+
+function hoodPeek(P: Painter, w = 130, top = 20, color = shade(P.p.color, -0.25)) {
+  if (!P.front) return;
+  const hood = poly([[500 - w - 6, 96], [500 - w, top + 14, 36], [500, top - 8, 70], [500 + w, top + 14, 36], [500 + w + 6, 96]]);
+  P.part(hood, P.pat(P.p.fabric, toHex(color)), { puff: 0.55 });
+}
+
+function snaps(P: Painter, x: number, ys: number[], r = 9, kind: Metal = "steel") {
+  for (const y of ys) P.metal(x, y, r, kind, { ring: true });
+}
+
+function flapPocket(P: Painter, x0: number, x1: number, y0: number, flapH: number, bodyH: number, snap = true) {
+  const body = poly([[x0, y0], [x1, y0], [x1, y0 + bodyH, 8], [x0, y0 + bodyH, 8]], 4);
+  P.raise(body, 0.05);
+  P.stitch(poly([[x0 + 8, y0], [x1 - 8, y0], [x1 - 8, y0 + bodyH - 8, 6], [x0 + 8, y0 + bodyH - 8, 6]], 4));
+  const flap = poly([[x0 - 6, y0 - 8], [x1 + 6, y0 - 8], [x1 + 6, y0 + flapH, 6], [x0 - 6, y0 + flapH, 6]], 4);
+  P.c.save();
+  P.c.shadowColor = "rgba(0,0,0,0.55)";
+  P.c.shadowBlur = 10 * P.k;
+  P.c.shadowOffsetY = 5 * P.k;
+  P.c.fillStyle = P.main;
+  P.c.fill(flap);
+  P.c.restore();
+  P.raise(flap, 0.1);
+  P.stitch(poly([[x0 + 2, y0], [x1 - 2, y0], [x1 - 2, y0 + flapH - 8, 4], [x0 + 2, y0 + flapH - 8, 4]], 4));
+  if (snap) P.metal((x0 + x1) / 2, y0 + flapH * 0.55, 8, "matte");
+}
+
+function parka(P: Painter) {
+  hoodPeek(P, 140, 14);
+  const body = poly(half([[0, 95, 0], [125, 85, 10], [330, 150, 26], [330, 420, 40], [348, 1250, 20], [0, 1262, 0]]));
+  P.part(body, P.main, { puff: 0.82 });
+  const right: Pt[] = [[820, 148], [925, 580], [940, 1080], [852, 1088], [820, 1000], [800, 420]];
+  const [SR, SL] = sleeves(P, right, P.main, 0.8);
+  P.groove(curve([[800, 420], [820, 1000], [850, 1084]]), 4, 0.8);
+  P.groove(curve(mxy([[800, 420], [820, 1000], [850, 1084]])), 4, 0.8);
+  for (const [S, s] of [[SR, 1], [SL, -1]] as const) {
+    P.fold(500 + s * 380, 620, 1060, 34, 0.14, S);
+    const tab: Pt[] = [[858, 1030], [932, 1026], [934, 1064], [860, 1068]];
+    const t = poly(s === 1 ? tab : mx(tab), 4);
+    P.raise(t, 0.08);
+    P.stitch(t, { color: shade(P.p.color, -0.25) });
+  }
+  // tunel s vezicom u struku
+  P.stitch(curve([[175, 630], [825, 630]]), { color: shade(P.p.color, -0.25) });
+  P.stitch(curve([[175, 672], [825, 672]]), { color: shade(P.p.color, -0.25) });
+  const collar = poly(half([[0, 30, 0], [132, 34, 16], [140, 152, 8], [0, 160, 0]]), 10);
+  P.c.save();
+  P.c.shadowColor = "rgba(0,0,0,0.55)";
+  P.c.shadowBlur = 14 * P.k;
+  P.c.shadowOffsetY = 6 * P.k;
+  P.c.fillStyle = P.main;
+  P.c.fill(collar);
+  P.c.restore();
+  P.part(collar, P.main, { puff: 0.95, rim: 0.5 });
+  P.stitch(curve([[372, 140], [628, 140]]), { color: shade(P.p.color, -0.25) });
+  if (P.front) {
+    for (const s of [1, -1]) {
+      const X = (x: number) => 500 + s * x;
+      flapPocket(P, Math.min(X(95), X(265)), Math.max(X(95), X(265)), 330, 58, 170);
+      flapPocket(P, Math.min(X(80), X(300)), Math.max(X(80), X(300)), 830, 70, 250);
+      P.fold(X(200), 700, 1250, 50, 0.12, body);
+    }
+    // lajsna preko patenta
+    const placket = poly([[468, 40], [532, 40], [532, 1256], [468, 1256]], 2);
+    P.c.save();
+    P.c.shadowColor = "rgba(0,0,0,0.5)";
+    P.c.shadowBlur = 8 * P.k;
+    P.c.shadowOffsetX = 3 * P.k;
+    P.c.fillStyle = P.main;
+    P.c.fill(placket);
+    P.c.restore();
+    P.raise(placket, 0.05);
+    P.stitch(curve([[474, 40], [474, 1256]]), { color: shade(P.p.color, -0.25) });
+    P.stitch(curve([[526, 40], [526, 1256]]), { color: shade(P.p.color, -0.25) });
+    snaps(P, 500, [110, 300, 480, 760, 960, 1160], 10, "matte");
+    // vezice s kopčama
+    for (const s of [-1, 1]) {
+      const x = 500 + s * 62;
+      const cord = curve([[x, 652], [x + s * 6, 700], [x + s * 2, 760]]);
+      P.c.save();
+      P.c.lineCap = "round";
+      P.c.strokeStyle = "#1c1c1c";
+      P.c.lineWidth = 7;
+      P.c.stroke(cord);
+      P.c.fillStyle = "#151515";
+      P.c.beginPath();
+      P.c.roundRect(x + s * 2 - 9, 755, 18, 30, 6);
+      P.c.fill();
+      P.c.restore();
+    }
+  } else {
+    P.groove(curve([[500, 160], [500, 1258]]), 3, 0.6);
+    for (const s of [1, -1]) P.fold(500 + s * 180, 400, 1250, 55, 0.12, body);
+  }
+}
+
+function bomber(P: Painter) {
+  const body = poly(half([[0, 90, 0], [120, 82, 10], [330, 150, 30], [340, 420, 50], [330, 905, 10], [0, 905, 0]]));
+  P.part(body, P.main, { puff: 0.9 });
+  const right: Pt[] = [[825, 148], [935, 560], [935, 990], [850, 996], [818, 920], [800, 420]];
+  const [SR, SL] = sleeves(P, right, P.main, 0.95);
+  P.groove(curve([[800, 420], [818, 920], [848, 992]]), 4, 0.8);
+  P.groove(curve(mxy([[800, 420], [818, 920], [848, 992]])), 4, 0.8);
+  for (const [S, s] of [[SR, 1], [SL, -1]] as const) {
+    P.fold(500 + s * 390, 450, 980, 26, 0.18, S);
+    P.fold(500 + s * 360, 600, 980, 22, 0.12, S);
+  }
+  const trim = P.trim(shade(P.p.color, -0.05));
+  P.part(poly(half([[0, 895, 0], [318, 895, 8], [310, 990, 14], [0, 994, 0]]), 6), trim, { puff: 0.85, rim: 0.5 });
+  cuffs(P, [[848, 985], [936, 982], [930, 1075], [856, 1080]], trim);
+  const collar = poly(half([[0, 28, 0], [132, 30, 20], [140, 122, 10], [0, 130, 0]]), 10);
+  P.c.save();
+  P.c.shadowColor = "rgba(0,0,0,0.55)";
+  P.c.shadowBlur = 14 * P.k;
+  P.c.shadowOffsetY = 6 * P.k;
+  P.c.fillStyle = trim;
+  P.c.fill(collar);
+  P.c.restore();
+  P.part(collar, trim, { puff: 0.95, rim: 0.4 });
+  for (const s of [1, -1]) P.fold(500 + s * 200, 300, 890, 60, 0.12, body);
+  if (P.front) {
+    P.zipper(500, 28, 994, "steel", 12);
+    P.pull(500, 150, "steel");
+    for (const s of [1, -1]) {
+      const pts: Pt[] = [[590, 700], [770, 640], [782, 682], [602, 742]];
+      const flap = poly(s === 1 ? pts : mx(pts), 6);
+      P.c.save();
+      P.c.shadowColor = "rgba(0,0,0,0.6)";
+      P.c.shadowBlur = 10 * P.k;
+      P.c.shadowOffsetY = 5 * P.k;
+      P.c.fillStyle = P.main;
+      P.c.fill(flap);
+      P.c.restore();
+      P.raise(flap, 0.1);
+      P.stitch(poly(s === 1 ? [[598, 706], [764, 650], [772, 676], [606, 732]] : mx([[598, 706], [764, 650], [772, 676], [606, 732]]), 4));
+    }
+    // džep na rukavu
+    P.c.save();
+    P.c.clip(SL);
+    const pk = poly([[84, 300], [150, 296], [154, 430, 6], [88, 434, 6]], 6);
+    P.c.fillStyle = P.main;
+    P.c.shadowColor = "rgba(0,0,0,0.5)";
+    P.c.shadowBlur = 8 * P.k;
+    P.c.fill(pk);
+    P.c.restore();
+    P.raise(pk, 0.08);
+    P.stitch(poly([[90, 306], [144, 302], [148, 424, 4], [94, 428, 4]], 4));
+    P.zipper(118, 312, 340, "steel", 8);
+    for (const x of [98, 112, 126, 140]) {
+      P.c.save();
+      P.c.strokeStyle = "rgba(0,0,0,0.45)";
+      P.c.lineWidth = 3;
+      P.c.beginPath();
+      P.c.moveTo(x, 360);
+      P.c.lineTo(x, 410);
+      P.c.stroke();
+      P.c.restore();
+    }
+  } else {
+    P.groove(curve([[500, 130], [500, 900]]), 3, 0.5);
+  }
+}
+
+function softshell(P: Painter) {
+  hoodPeek(P, 128, 4);
+  const body = poly(half([[0, 90, 0], [118, 80, 10], [315, 140, 24], [300, 400, 40], [310, 1080, 24], [0, 1092, 0]]));
+  P.part(body, P.main, { puff: 0.8 });
+  const right: Pt[] = [[810, 138], [905, 560], [918, 1040], [836, 1046], [806, 960], [786, 400]];
+  const [SR, SL] = sleeves(P, right, P.main, 0.75);
+  P.groove(curve([[786, 400], [806, 960], [834, 1042]]), 3, 0.7);
+  P.groove(curve(mxy([[786, 400], [806, 960], [834, 1042]])), 3, 0.7);
+  for (const [S, s] of [[SR, 1], [SL, -1]] as const) {
+    P.fold(500 + s * 365, 560, 1030, 26, 0.12, S);
+    const tab: Pt[] = [[840, 1004], [916, 1000], [918, 1036], [842, 1040]];
+    P.raise(poly(s === 1 ? tab : mx(tab), 4), 0.07);
+    P.groove(poly(s === 1 ? tab : mx(tab), 4), 2, 0.5);
+  }
+  // panelni šavovi
+  for (const s of [1, -1]) {
+    const X = (x: number) => 500 + s * x;
+    P.groove(curve([[X(250), 150], [X(190), 520], [X(205), 1080]]), 4, 0.7);
+  }
+  const collar = poly(half([[0, 10, 0], [128, 14, 24], [136, 142, 10], [0, 152, 0]]), 12);
+  P.c.save();
+  P.c.shadowColor = "rgba(0,0,0,0.6)";
+  P.c.shadowBlur = 16 * P.k;
+  P.c.shadowOffsetY = 7 * P.k;
+  P.c.fillStyle = P.main;
+  P.c.fill(collar);
+  P.c.restore();
+  P.part(collar, P.main, { puff: 1, rim: 0.5 });
+  const indigo = "#3b4bc4";
+  const cordPull = (x: number, y: number) => {
+    P.c.save();
+    P.c.lineCap = "round";
+    P.c.strokeStyle = indigo;
+    P.c.lineWidth = 5;
+    P.c.beginPath();
+    P.c.moveTo(x, y);
+    P.c.quadraticCurveTo(x + 8, y + 30, x, y + 52);
+    P.c.stroke();
+    P.c.fillStyle = "#1a1a1a";
+    P.c.beginPath();
+    P.c.roundRect(x - 6, y + 48, 12, 18, 4);
+    P.c.fill();
+    P.c.restore();
+  };
+  if (P.front) {
+    // vodootporni patent: bez vidljivih zuba
+    P.c.save();
+    P.c.strokeStyle = "rgba(0,0,0,0.55)";
+    P.c.lineWidth = 6;
+    P.c.beginPath();
+    P.c.moveTo(500, 10);
+    P.c.lineTo(500, 1092);
+    P.c.stroke();
+    P.c.strokeStyle = "rgba(255,255,255,0.08)";
+    P.c.lineWidth = 2;
+    P.c.beginPath();
+    P.c.moveTo(503, 10);
+    P.c.lineTo(503, 1092);
+    P.c.stroke();
+    P.c.restore();
+    P.groove(curve([[500, 10], [500, 1092]]), 3, 0.6);
+    cordPull(504, 150);
+    // džep na prsima i bočni džepovi
+    P.groove(curve([[600, 330], [728, 300]]), 6, 1);
+    cordPull(606, 330);
+    for (const s of [1, -1]) {
+      const X = (x: number) => 500 + s * x;
+      P.groove(curve([[X(150), 690], [X(200), 900]]), 6, 1);
+      cordPull(X(152), 694);
+    }
+    P.metal(330, 280, 7, "steel");
+  } else {
+    P.groove(curve([[300, 330], [500, 360], [700, 330]]), 4, 0.6);
+  }
+}
+
+function binding(P: Painter, path: Path2D, color: string, w = 16) {
+  P.c.save();
+  P.c.strokeStyle = color;
+  P.c.lineWidth = w;
+  P.c.lineJoin = "round";
+  P.c.shadowColor = "rgba(0,0,0,0.35)";
+  P.c.shadowBlur = 4 * P.k;
+  P.c.stroke(path);
+  P.c.restore();
+  P.m.save();
+  P.m.lineWidth = w;
+  P.m.lineJoin = "round";
+  P.m.stroke(path);
+  P.m.restore();
+  P.stitch(path, { color: shade(color, -0.25), w: 2, dash: [6, 4], alpha: 0.7 });
+}
+
+function fleecevest(P: Painter) {
+  const accent = P.p.accent ?? "#6b5a45";
+  const right: Pt[] = [[0, 72, 0], [128, 70, 10], [238, 132, 16], [205, 255, 70], [290, 450, 40], [300, 1080, 30], [0, 1092, 0]];
+  const body = poly(half(right));
+  P.part(body, P.main, { puff: 0.95 });
+  for (const s of [1, -1]) P.fold(500 + s * 170, 500, 1080, 60, 0.1, body);
+  for (const s of [1, -1]) {
+    const pts: XY[] = [[500 + s * 238, 134], [500 + s * 206, 255], [500 + s * 236, 380], [500 + s * 290, 452]];
+    binding(P, curve(pts), accent);
+  }
+  binding(P, curve([[200, 1086], [500, 1092], [800, 1086]]), accent);
+  const collar = poly(half([[0, 18, 0], [140, 20, 24], [146, 140, 10], [0, 150, 0]]), 12);
+  P.c.save();
+  P.c.shadowColor = "rgba(0,0,0,0.5)";
+  P.c.shadowBlur = 16 * P.k;
+  P.c.shadowOffsetY = 7 * P.k;
+  P.c.fillStyle = P.main;
+  P.c.fill(collar);
+  P.c.restore();
+  P.part(collar, P.main, { puff: 1, rim: 0.5 });
+  binding(P, curve([[356, 22], [500, 18], [644, 22]]), accent, 14);
+  if (P.front) {
+    binding(P, curve([[500, 18], [500, 1092]]), accent, 18);
+    P.zipper(500, 18, 1092, "matte", 10);
+    P.pull(500, 140, "matte");
+    const pk = poly([[600, 300], [742, 300], [742, 420, 6], [600, 420, 6]], 6);
+    P.part(pk, P.pat("nylon", accent), { puff: 0.8, rim: 0.4 });
+    P.stitch(poly([[606, 306], [736, 306], [736, 414, 4], [606, 414, 4]], 4), { color: shade(accent, -0.3) });
+    P.zipper(671, 312, 316, "matte", 6);
+  }
+}
+
+function quiltvest(P: Painter) {
+  const lining = P.p.accent ?? "#9a5a2e";
+  const right: Pt[] = [[0, 82, 0], [125, 76, 10], [235, 132, 16], [204, 255, 70], [288, 450, 40], [296, 1062, 30], [0, 1074, 0]];
+  const body = poly(half(right));
+  P.part(body, P.main, { puff: 0.85 });
+  // rombovi
+  const step = 92;
+  const lines = new Path2D();
+  for (let d = -1400; d < 1400; d += step) {
+    lines.moveTo(d, 0);
+    lines.lineTo(d + 1300, 1300);
+    lines.moveTo(d + 1300, 0);
+    lines.lineTo(d, 1300);
+  }
+  P.c.save();
+  P.c.clip(body);
+  P.c.strokeStyle = "rgba(0,0,0,0.5)";
+  P.c.lineWidth = 4;
+  P.c.shadowColor = "rgba(0,0,0,0.6)";
+  P.c.shadowBlur = 14 * P.k;
+  P.c.stroke(lines);
+  P.c.shadowBlur = 0;
+  P.c.translate(2, 3);
+  P.c.strokeStyle = "rgba(255,255,255,0.07)";
+  P.c.lineWidth = 3;
+  P.c.stroke(lines);
+  P.c.restore();
+  P.c.save();
+  P.c.clip(body);
+  P.c.setLineDash([6, 4]);
+  P.c.strokeStyle = shade(P.p.color, -0.35);
+  P.c.lineWidth = 2;
+  P.c.stroke(lines);
+  P.c.restore();
+  if (P.h) {
+    P.h.save();
+    P.h.clip(body);
+    P.h.strokeStyle = "rgba(0,0,0,0.7)";
+    P.h.lineWidth = 12;
+    P.h.filter = `blur(${10 * P.k}px)`;
+    P.h.stroke(lines);
+    P.h.restore();
+  }
+  const edge = shade(P.p.color, -0.3);
+  for (const s of [1, -1]) {
+    const pts: XY[] = [[500 + s * 235, 134], [500 + s * 205, 255], [500 + s * 234, 380], [500 + s * 288, 452]];
+    binding(P, curve(pts), edge, 14);
+  }
+  binding(P, curve([[204, 1066], [500, 1074], [796, 1066]]), edge, 14);
+  if (P.front) {
+    // izrez bez ovratnika: vidi se postava u kontrastnoj boji
+    const neck = new Path2D();
+    neck.moveTo(375, 78);
+    neck.quadraticCurveTo(500, 104, 625, 78);
+    neck.lineTo(512, 300);
+    neck.lineTo(488, 300);
+    neck.closePath();
+    P.c.save();
+    P.c.fillStyle = P.pat("lining", lining);
+    P.c.fill(neck);
+    P.c.fillStyle = "rgba(0,0,0,0.25)";
+    P.c.fill(neck);
+    P.c.restore();
+    binding(P, curve([[378, 80], [430, 190], [500, 300]]), edge, 14);
+    binding(P, curve([[622, 80], [570, 190], [500, 300]]), edge, 14);
+    binding(P, curve([[500, 300], [500, 1074]]), edge, 12);
+    snaps(P, 500, [360, 520, 680, 840, 1000], 10, "steel");
+    for (const s of [1, -1]) {
+      const X = (x: number) => 500 + s * x;
+      P.groove(curve([[X(120), 820], [X(250), 820]]), 7, 1.2);
+      P.metal(X(185), 845, 8, "steel");
+    }
+  }
+}
+
 const DRAW: Record<Product["kind"], (P: Painter) => void> = {
   tee,
   hoodie,
@@ -1192,6 +1558,11 @@ const DRAW: Record<Product["kind"], (P: Painter) => void> = {
   jeans,
   trousers,
   belt,
+  parka,
+  bomber,
+  softshell,
+  fleecevest,
+  quiltvest,
 };
 
 export interface Drawn {
@@ -1246,4 +1617,44 @@ export function drawGarment(p: Product, side: "front" | "back", widthPx: number,
     ctx.restore();
   }
   return { color: colorC, height: heightC };
+}
+
+
+/** Složen komad viđen odozgo (za sto i police). Isječak prednje strane uz sjenu pregiba. */
+export function drawFolded(p: Product, widthPx: number): HTMLCanvasElement {
+  const bottoms = p.kind === "jeans" || p.kind === "trousers";
+  const src = drawGarment(p, "front", widthPx * 1.9, false).color;
+  const k = src.width / DW;
+  const [x0, y0, x1, y1] = bottoms ? [150, 22, 850, 560] : [215, 40, 785, 660];
+  const w = Math.round(widthPx);
+  const h = Math.round((widthPx * (y1 - y0)) / (x1 - x0));
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const x = c.getContext("2d", { willReadFrequently: true })!;
+  const r = Math.min(w, h) * 0.06;
+  x.save();
+  x.beginPath();
+  x.roundRect(0, 0, w, h, r);
+  x.clip();
+  x.fillStyle = patternFor(x, fabricTile(p.fabric, toHex(p.color)), w / (x1 - x0));
+  x.fillRect(0, 0, w, h);
+  x.drawImage(src, x0 * k, y0 * k, (x1 - x0) * k, (y1 - y0) * k, 0, 0, w, h);
+  // pregib dolje i blago sjenčenje
+  const g = x.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, "rgba(255,250,240,0.06)");
+  g.addColorStop(0.82, "rgba(0,0,0,0)");
+  g.addColorStop(0.93, "rgba(0,0,0,0.22)");
+  g.addColorStop(1, "rgba(0,0,0,0.4)");
+  x.fillStyle = g;
+  x.fillRect(0, 0, w, h);
+  const s = x.createLinearGradient(0, 0, w, 0);
+  s.addColorStop(0, "rgba(0,0,0,0.25)");
+  s.addColorStop(0.08, "rgba(0,0,0,0)");
+  s.addColorStop(0.92, "rgba(0,0,0,0)");
+  s.addColorStop(1, "rgba(0,0,0,0.25)");
+  x.fillStyle = s;
+  x.fillRect(0, 0, w, h);
+  x.restore();
+  return c;
 }
