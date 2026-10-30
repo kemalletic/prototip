@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { DRAPE_H, DRAPE_W } from "@/lib/garments/drape";
 import { drapeTextures } from "@/lib/garments/textures";
 import { live } from "@/lib/store";
+import type { SceneLook } from "@/lib/theme";
 import { DRAPE_TOP, HERO_X, WALL_Z } from "@/lib/world";
 import { rig } from "./rig";
 
@@ -19,7 +20,7 @@ const GATHER = 0.84;
  * Komad denima koji visi s šipke. Verlet simulacija: kursor je ruka,
  * a naginjanje telefona je vjetar.
  */
-export function Drape() {
+export function Drape({ look }: { look: SceneLook }) {
   const { camera } = useThree();
   const tex = useMemo(() => drapeTextures(), []);
 
@@ -193,6 +194,7 @@ export function Drape() {
     sim.geo.computeVertexNormals();
   });
 
+  const pipe = look.hanger !== "wood";
   const clips = useMemo(() => {
     const out: number[] = [];
     for (let i = 0; i < COLS; i++) if (i % 3 === 0 || i === COLS - 1) out.push((i / (COLS - 1) - 0.5) * DRAPE_W * GATHER);
@@ -216,19 +218,19 @@ export function Drape() {
       </mesh>
       {/* šipka i štipaljke */}
       <mesh position={[0, DRAPE_H / 2 + 0.035, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0.011, 0.011, DRAPE_W * GATHER + 0.34, 20]} />
-        <meshStandardMaterial color="#8b857c" metalness={1} roughness={0.32} />
+        <cylinderGeometry args={[pipe ? 0.015 : 0.011, pipe ? 0.015 : 0.011, DRAPE_W * GATHER + 0.34, 20]} />
+        <meshStandardMaterial color={look.rod} metalness={look.rodMetal} roughness={pipe ? 0.42 : 0.32} />
       </mesh>
       {[-1, 1].map((s) => (
         <mesh key={s} position={[s * ((DRAPE_W * GATHER) / 2 + 0.17), DRAPE_H / 2 + 0.035, 0]}>
-          <sphereGeometry args={[0.018, 16, 16]} />
-          <meshStandardMaterial color="#8b857c" metalness={1} roughness={0.3} />
+          <sphereGeometry args={[pipe ? 0.022 : 0.018, 16, 16]} />
+          <meshStandardMaterial color={look.rod} metalness={look.rodMetal} roughness={0.35} />
         </mesh>
       ))}
       {[-1, 1].map((s) => (
         <mesh key={`b${s}`} position={[s * ((DRAPE_W * GATHER) / 2 + 0.1), DRAPE_H / 2 + 0.035, WALL_Z / 2]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.007, 0.007, -WALL_Z, 10]} />
-          <meshStandardMaterial color="#5f5a53" metalness={1} roughness={0.4} />
+          <cylinderGeometry args={[pipe ? 0.012 : 0.007, pipe ? 0.012 : 0.007, -WALL_Z, 10]} />
+          <meshStandardMaterial color={pipe ? look.rod : "#5f5a53"} metalness={pipe ? look.rodMetal : 1} roughness={0.4} />
         </mesh>
       ))}
       {clips.map((x) => (

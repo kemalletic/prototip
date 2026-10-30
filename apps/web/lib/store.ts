@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import type { Category } from "./catalog";
 import type { RegionId } from "./region";
+import type { Tema } from "./theme";
 
 export type Tier = "pending" | "full" | "static";
 
@@ -14,6 +15,7 @@ export interface CartLine {
 
 interface State {
   tier: Tier;
+  tema: Tema;
   ready: boolean;
   region: RegionId;
   sound: boolean;
@@ -34,6 +36,7 @@ interface State {
 
 export const useStore = create<State>((set) => ({
   tier: "pending",
+  tema: "noc",
   ready: false,
   region: "ba",
   sound: false,
