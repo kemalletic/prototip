@@ -133,6 +133,7 @@ export function Boutique({ light }: { light: BoutiqueLight }) {
   const curtain = useMemo(() => curtainTextures(), []);
   const curtainMaps = useMemo(() => ({ map: curtain.map, normal: curtain.normal }), [curtain]);
   const setStore = useStore((s) => s.set);
+  const small = useMemo(() => window.innerWidth < 768, []);
 
   // vrata se otvore kad kamera priđe
   const door = useRef<THREE.Group>(null);
@@ -227,6 +228,8 @@ export function Boutique({ light }: { light: BoutiqueLight }) {
       <Cloth
         width={DRAPE_W}
         height={DRAPE_H}
+        cols={small ? 22 : 30}
+        rows={small ? 30 : 40}
         position={[DRAPE_POS.x, DRAPE_POS.top, DRAPE_POS.z]}
         front={{ map: drape.front, normal: drape.frontNormal }}
         back={{ map: drape.back, normal: drape.backNormal }}

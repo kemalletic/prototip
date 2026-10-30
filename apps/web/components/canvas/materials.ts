@@ -179,12 +179,12 @@ export function travertine(base = "#d9ccb4"): Maps {
     for (let s = 16; s >= 0; s--) x.lineTo((W * s) / 16, yy + th + Math.sin(s * 0.8 + i) * 4);
     x.fill();
   }
-  for (let i = 0; i < 520; i++) {
+  for (let i = 0; i < 240; i++) {
     const px = r() * W;
     const py = r() * H;
-    const rx = 1 + r() * 7;
-    const ry = 0.6 + r() * 1.6;
-    x.fillStyle = shade(base, -0.3, 0.5);
+    const rx = 0.8 + r() * 3.5;
+    const ry = 0.5 + r() * 1.1;
+    x.fillStyle = shade(base, -0.18, 0.35);
     x.beginPath();
     x.ellipse(px, py, rx, ry, 0, 0, Math.PI * 2);
     x.fill();

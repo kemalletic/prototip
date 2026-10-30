@@ -18,6 +18,7 @@ import { Folded } from "./Folded";
 import { loadRail } from "./Garment";
 import { boutiqueLight } from "./lighting";
 import { Lights } from "./Lights";
+import { Shading } from "./Shading";
 import { rig } from "./rig";
 
 function Exposure({ value }: { value: number }) {
@@ -63,6 +64,7 @@ export default function Experience() {
         <fog attach="fog" args={[light.sky, light.fogNear, light.fogFar]} />
         <Suspense fallback={null}>
           <Boutique light={light} />
+          <Shading />
           <Lights ambient={ambient} light={light} lite={lite} />
           {FIXTURES.map((f) => (
             <FixtureView key={f.id} f={f} focus={focus} />

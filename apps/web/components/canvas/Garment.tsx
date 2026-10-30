@@ -25,7 +25,8 @@ const ROUGH: Record<Fabric, number> = {
 };
 
 let sharedGeo: THREE.PlaneGeometry | null = null;
-const geo = () => (sharedGeo ??= new THREE.PlaneGeometry(GW, GH, 64, 84));
+const geo = () =>
+  (sharedGeo ??= window.innerWidth < 768 ? new THREE.PlaneGeometry(GW, GH, 40, 52) : new THREE.PlaneGeometry(GW, GH, 64, 84));
 
 type Pair = { front: GarmentTex; back: GarmentTex };
 const railJobs = new Map<string, Promise<Pair>>();
