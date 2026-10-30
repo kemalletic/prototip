@@ -51,9 +51,16 @@ export function Collection() {
   useEffect(() => {
     const y = useStore.getState().returnScroll;
     if (y == null) return;
-    scrollToY(y, true);
-    requestAnimationFrame(() => scrollToY(y, true));
+    // ponovi par kadrova dok se visina šine ne postavi
+    let n = 0;
+    let raf = 0;
+    const again = () => {
+      scrollToY(y, true);
+      if (++n < 6 && Math.abs(window.scrollY - y) > 2) raf = requestAnimationFrame(again);
+    };
+    again();
     useStore.getState().set({ returnScroll: null });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const choose = (c: Category | "sve") => {
