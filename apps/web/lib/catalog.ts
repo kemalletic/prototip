@@ -21,12 +21,7 @@ export type GarmentKind =
   | "rollneck"
   | "jeans"
   | "trousers"
-  | "belt"
-  | "parka"
-  | "bomber"
-  | "softshell"
-  | "fleecevest"
-  | "quiltvest";
+  | "belt";
 
 export type Fabric =
   | "denim"
@@ -37,8 +32,7 @@ export type Fabric =
   | "fineknit"
   | "wool"
   | "twill"
-  | "leather"
-  | "softshell";
+  | "leather";
 
 export interface Hotspot {
   /** Koordinate u prostoru kroja (0..1000, 0..1300). */
@@ -361,105 +355,6 @@ export const PRODUCTS: Product[] = [
     summary: "Kaiš od biljno štavljene kože koja s godinama potamni. Kopča od brušenog čelika.",
     materials: ["Biljno štavljena koža, 4 mm", "Kopča od brušenog čelika", "Ručno bojeni rubovi"],
     hotspots: [{ x: 452, y: 720, label: "Kopča od brušenog čelika" }],
-  },
-  {
-    slug: "jakna-vranica",
-    no: 16,
-    name: "Vranica",
-    category: "jakne",
-    kind: "parka",
-    fabric: "twill",
-    color: "#6b6448",
-    thread: "#5a543b",
-    price: 329,
-    sizes: TOPS,
-    colorName: "Kaki",
-    summary: "Duga parka s kapuljačom i četiri džepa. Vjetar i kiša ostaju napolju, a ispod stane debeli džemper.",
-    materials: ["Vanjski sloj: 60% pamuk, 40% najlon, vodoodbojno", "Postava: prošiveni sintetički sloj", "Vezica u struku"],
-    hotspots: [
-      { x: 180, y: 420, label: "Džepovi s preklopom i drukerom" },
-      { x: 500, y: 650, label: "Vezica za podešavanje struka" },
-      { x: 500, y: 300, label: "Lajsna preko patenta drži vjetar" },
-    ],
-  },
-  {
-    slug: "jakna-cincar",
-    no: 17,
-    name: "Cincar",
-    category: "jakne",
-    kind: "bomber",
-    fabric: "nylon",
-    color: "#1f2330",
-    thread: "#2b3040",
-    price: 199,
-    sizes: TOPS,
-    colorName: "Noćno plava",
-    summary: "Bomber jakna od mat najlona s rebrastim rubovima i džepom na rukavu. Lagana, a topla.",
-    materials: ["Vanjski sloj: 100% najlon, mat", "Rebrasti rubovi: vuna i akril", "Metalni patent"],
-    hotspots: [
-      { x: 118, y: 360, label: "Džep na rukavu s patentom" },
-      { x: 500, y: 940, label: "Rebrasti rub koji drži formu" },
-    ],
-  },
-  {
-    slug: "jakna-klekovaca",
-    no: 18,
-    name: "Klekovača",
-    category: "jakne",
-    kind: "softshell",
-    fabric: "softshell",
-    color: "#3b3e43",
-    thread: "#2f3236",
-    accent: "#3b4bc4",
-    price: 239,
-    sizes: TOPS,
-    colorName: "Grafit",
-    summary: "Softshell jakna s visokim ovratnikom i kapuljačom. Rasteže se, diše i ne propušta vjetar.",
-    materials: ["94% poliester, 6% elastan, troslojni softshell", "Vodootporni patenti", "Indigo vezice na patentima"],
-    hotspots: [
-      { x: 664, y: 316, label: "Džep na prsima s vodootpornim patentom" },
-      { x: 504, y: 190, label: "Indigo vezica, potpis brenda" },
-    ],
-  },
-  {
-    slug: "prsluk-ozren",
-    no: 19,
-    name: "Ozren",
-    category: "prsluci",
-    kind: "fleecevest",
-    fabric: "fleece",
-    color: "#d9d0bf",
-    thread: "#c6bca9",
-    accent: "#6b5a45",
-    price: 129,
-    sizes: TOPS,
-    colorName: "Ekru",
-    summary: "Mekani flis prsluk s porubom od najlona. Nosi se preko majice ili ispod jakne.",
-    materials: ["100% reciklirani poliester flis, 300 g/m²", "Porub i džep od najlona", "Patent cijelom dužinom"],
-    hotspots: [
-      { x: 671, y: 360, label: "Džep od najlona s patentom" },
-      { x: 280, y: 300, label: "Kontrastni porub" },
-    ],
-  },
-  {
-    slug: "prsluk-konjuh",
-    no: 20,
-    name: "Konjuh",
-    category: "prsluci",
-    kind: "quiltvest",
-    fabric: "nylon",
-    color: "#1f2940",
-    thread: "#2a3550",
-    accent: "#9a5a2e",
-    price: 149,
-    sizes: TOPS,
-    colorName: "Mornarsko plava",
-    summary: "Prošiveni prsluk bez ovratnika, s drukerima i postavom boje rđe. Ide i ispod sakoa.",
-    materials: ["Vanjski sloj: 100% najlon", "Punjenje: sintetičko, 60 g/m²", "Postava boje rđe"],
-    hotspots: [
-      { x: 500, y: 200, label: "Postava u kontrastnoj boji" },
-      { x: 500, y: 680, label: "Metalni drukeri" },
-    ],
   },
 ];
 

@@ -21,12 +21,10 @@ const ROUGH: Record<Fabric, number> = {
   wool: 0.86,
   twill: 0.78,
   leather: 0.48,
-  softshell: 0.72,
 };
 
 let sharedGeo: THREE.PlaneGeometry | null = null;
-const geo = () =>
-  (sharedGeo ??= window.innerWidth < 768 ? new THREE.PlaneGeometry(GW, GH, 40, 52) : new THREE.PlaneGeometry(GW, GH, 64, 84));
+const geo = () => (sharedGeo ??= new THREE.PlaneGeometry(GW, GH, 64, 84));
 
 type Pair = { front: GarmentTex; back: GarmentTex };
 const railJobs = new Map<string, Promise<Pair>>();
@@ -59,15 +57,12 @@ function loadHi(p: Product) {
 interface Props {
   p: Product;
   x: number;
+  visible: boolean;
   focused: boolean;
-  fixtureId: string;
-  rodY?: number;
-  /** Komad se prikazuje samo kad je u fokusu (sto, police). */
-  display?: boolean;
   hangerStyle?: HangerStyle;
 }
 
-export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = false, hangerStyle = "steel" }: Props) {
+export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props) {
   const pivot = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
   const [tex, setTex] = useState<Pair | null>(null);
@@ -136,9 +131,8 @@ export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = fals
 
   const st = useRef({
     x,
-    y: display ? rodY - 1.3 : rodY,
+    y: ROD_Y + (visible ? 0 : 2.4),
     z: 0,
-    scale: display ? 0 : 1,
     vx: 0,
     swing: 0,
     swingV: 0,
@@ -168,19 +162,16 @@ export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = fals
     const s = st.current;
     const dt = Math.min(delta, 1 / 30);
     const isFocus = rig.mode === "product" && rig.focus === p.slug;
-    let ty = rodY;
+    let ty = ROD_Y;
     let tz = 0;
-    if (display && !isFocus) ty = rodY - 1.3;
+    if (!visible && !isFocus) ty = ROD_Y + 2.4;
     if (isFocus) {
-      ty = rodY - 0.04;
+      ty = ROD_Y - 0.04;
       tz = FOCUS_Z;
     }
-    const tScale = display && !isFocus ? 0 : 1;
-    s.scale = THREE.MathUtils.damp(s.scale, tScale, isFocus ? 3 : 6, dt);
-    g.visible = s.scale > 0.01;
     // na stranici proizvoda šina se razmakne oko komada u fokusu
     let tx = x;
-    if (rig.mode === "product" && !isFocus && rig.focus && rig.fixtureOf.get(rig.focus) === fixtureId) {
+    if (rig.mode === "product" && !isFocus && rig.focus) {
       const fx = rig.xs.get(rig.focus) ?? 0;
       tx = x + (x >= fx ? 1.5 : -1.5);
     }
@@ -202,7 +193,6 @@ export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = fals
     s.tilt = THREE.MathUtils.damp(s.tilt, hoverTilt + Math.sin(state.clock.elapsedTime * 0.7 + s.seed) * 0.006, 4, dt);
 
     g.position.set(s.x, s.y, s.z);
-    g.scale.setScalar(Math.max(0.001, s.scale));
     g.rotation.set(isFocus ? 0 : s.tilt, 0, isFocus ? s.swing * 0.3 : s.swing);
 
     const targetRot = isFocus ? live.rotate : 0;
@@ -261,7 +251,7 @@ export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = fals
     },
     onClick: (e: ThreeEvent<MouseEvent>) => {
       const t = (hi ?? tex)?.[side];
-      if (!t || !e.uv || rig.mode !== "home" || display) return;
+      if (!t || !e.uv || rig.mode !== "home" || !visible) return;
       if (!hitMask(t.mask, e.uv.x, e.uv.y)) return;
       e.stopPropagation();
       document.body.style.cursor = "";
@@ -274,7 +264,7 @@ export function Garment({ p, x, focused, fixtureId, rodY = ROD_Y, display = fals
   const centerY = -HOOK_DROP - GH / 2 + yOff;
 
   return (
-    <group ref={pivot} position={[x, display ? rodY - 1.3 : rodY, 0]}>
+    <group ref={pivot} position={[x, ROD_Y + (visible ? 0 : 2.4), 0]}>
       <group ref={spin}>
         <Hanger kind={hangerFor(p.kind)} style={hangerStyle} />
         <group position={[0, centerY, 0]} visible={!!tex}>
