@@ -45,10 +45,11 @@ export function Hero() {
         </div>
       )}
       <div className="hero__copy">
+        <p className="hero__eyebrow tag-label">Denim · Jakne · Pletivo · Trenerke</p>
         <h1 id="hero-naslov" className="display hero__title">
           Sve počinje
           <br />
-          od tkanine.
+          od tkanine<em>.</em>
         </h1>
         <p className="hero__lede">
           Farmerke, jakne, džemperi i sve između, krojeno za BiH i region. Dostava u Bosnu i Hercegovinu, Srbiju, Hrvatsku i

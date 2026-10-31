@@ -3,7 +3,7 @@
 import Lenis from "lenis";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { detectTier } from "@/lib/device-tier";
 import { scroller } from "@/lib/scroll";
 import { live, useStore } from "@/lib/store";
@@ -20,6 +20,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const tier = useStore((s) => s.tier);
+  // etikete na tkaninama se crtaju na canvasu, pa font mora biti učitan prije scene
+  const [fontsReady, setFontsReady] = useState(false);
+
+  useEffect(() => {
+    const wait = new Promise((r) => setTimeout(r, 1500));
+    const load = document.fonts?.load('800 36px "Bricolage Grotesque Variable"') ?? Promise.resolve();
+    Promise.race([load, wait]).finally(() => setFontsReady(true));
+  }, []);
 
   useEffect(() => {
     const t = detectTier();
@@ -86,7 +94,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {tier === "full" && <Experience />}
+      {tier === "full" && fontsReady && <Experience />}
       <Header />
       <main className="relative z-10">{children}</main>
       {tier === "full" && <HangTag />}

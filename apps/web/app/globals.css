@@ -8,9 +8,15 @@
   --color-siva: #8e887e;
   --color-indigo: #2b3a8c;
   --color-nit: #5162d6;
+  /* kontrastni šav kao na farmerkama */
+  --color-sav: #d6a04a;
+  /* karton od viseće etikete */
+  --color-karton: #cdb48c;
+  --color-karton-tinta: #2a2118;
   --color-linija: rgb(233 228 218 / 0.14);
-  --font-display: "Bodoni Moda Variable", "Bodoni 72", Didot, serif;
+  --font-display: "Bricolage Grotesque Variable", "Schibsted Grotesk Variable", ui-sans-serif, sans-serif;
   --font-sans: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", monospace;
   --ease-teska: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -52,14 +58,36 @@ body {
 
 .display {
   font-family: var(--font-display);
-  font-variation-settings: "opsz" 96;
-  font-weight: 420;
-  letter-spacing: -0.035em;
-  line-height: 0.92;
+  font-optical-sizing: auto;
+  font-stretch: 80%;
+  font-weight: 760;
+  letter-spacing: -0.03em;
+  line-height: 0.88;
+}
+
+/* utisnute oznake: broj komada, cijena, mali natpisi (kao na etiketi farmerki) */
+.mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+.tag-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* naslovi proizvoda u listama i korpi */
+.font-display {
+  font-stretch: 85%;
+  font-weight: 650;
+  letter-spacing: -0.015em;
 }
 
 /* filmsko zrno preko svega */
@@ -113,7 +141,11 @@ body {
   color: var(--color-noc);
   padding: 15px 20px;
   font-size: 15px;
-  border-radius: 3px;
+  font-weight: 600;
+  border-radius: 4px;
+  /* prošiveno kao zakrpa */
+  outline: 1.5px dashed rgb(11 11 12 / 0.32);
+  outline-offset: -6px;
 }
 .btn-solid:disabled {
   opacity: 0.4;
@@ -122,7 +154,7 @@ body {
 
 /* šivena linija ispod aktivnog izbora */
 .stitched {
-  background: linear-gradient(90deg, var(--color-nit) 0 5px, transparent 5px 8px) left bottom / 8px 1.5px repeat-x;
+  background: linear-gradient(90deg, var(--color-sav) 0 5px, transparent 5px 8px) left bottom / 8px 1.5px repeat-x;
 }
 
 /* ------------------------------------------------------------ zaglavlje */
@@ -190,8 +222,9 @@ body {
   min-width: 24px;
   height: 24px;
   padding: 0 5px;
-  border: 1.5px dashed var(--color-nit);
+  border: 1.5px dashed var(--color-sav);
   border-radius: 999px;
+  font-family: var(--font-mono);
   font-size: 11px;
 }
 
@@ -224,7 +257,10 @@ body {
   animation: draw-thread 1.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 .loader__note {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-siva);
   opacity: 0;
   animation: fade-in 0.8s 0.6s forwards;
@@ -282,8 +318,26 @@ body {
     position: relative;
   }
 }
+.hero__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-bottom: 22px;
+  color: var(--color-kost-2);
+}
+.hero__eyebrow::before {
+  content: "";
+  width: 34px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--color-sav) 0 5px, transparent 5px 8px) 0 0 / 8px 1.5px repeat-x;
+}
 .hero__title {
-  font-size: clamp(50px, 9.2vw, 150px);
+  font-size: clamp(56px, 10.4vw, 168px);
+}
+.hero__title em {
+  font-style: normal;
+  color: var(--color-sav);
 }
 .hero__lede {
   margin-top: 22px;
@@ -315,17 +369,19 @@ body {
 .hero__down-thread {
   width: 1.5px;
   height: 44px;
-  background: linear-gradient(180deg, var(--color-nit) 0 6px, transparent 6px 10px) 0 0 / 1.5px 10px repeat-y;
+  background: linear-gradient(180deg, var(--color-sav) 0 6px, transparent 6px 10px) 0 0 / 1.5px 10px repeat-y;
   animation: stitch-down 1.6s linear infinite;
 }
 @keyframes stitch-down {
   to { background-position: 0 20px; }
 }
 .hero__ambient {
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
   color: var(--color-siva);
   text-align: right;
-  max-width: 28ch;
+  max-width: 40ch;
 }
 .hero__static {
   position: absolute;
@@ -396,7 +452,7 @@ body {
   font-size: clamp(44px, 6vw, 88px);
 }
 .collection__title--rail {
-  font-size: clamp(34px, 3.4vw, 48px);
+  font-size: clamp(36px, 3.8vw, 56px);
 }
 @media (max-width: 767px) {
   .collection--rail .collection__head {
@@ -418,7 +474,10 @@ body {
 }
 .collection__count {
   margin-top: 8px;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-siva);
 }
 .collection__controls {
@@ -463,7 +522,7 @@ body {
 .filters button[aria-pressed="true"],
 .view-toggle button[aria-pressed="true"] {
   color: var(--color-kost);
-  background: linear-gradient(90deg, var(--color-nit) 0 5px, transparent 5px 8px) left bottom / 8px 1.5px repeat-x;
+  background: linear-gradient(90deg, var(--color-sav) 0 5px, transparent 5px 8px) left bottom / 8px 1.5px repeat-x;
 }
 .view-toggle {
   display: inline-flex;
@@ -493,9 +552,17 @@ body {
   min-width: 96px;
   transition: color 0.3s, border-color 0.3s;
 }
+.rail-index__no,
+.rail-index__price {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
 .rail-index__name {
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 20px;
+  font-stretch: 85%;
+  font-weight: 650;
   color: inherit;
   letter-spacing: -0.01em;
 }
@@ -503,7 +570,7 @@ body {
 .rail-index a[data-hover],
 .rail-index a:hover {
   color: var(--color-kost);
-  border-top-color: var(--color-nit);
+  border-top-color: var(--color-sav);
 }
 .rail-index__hint {
   margin-top: 14px;
@@ -538,6 +605,10 @@ body {
   height: 100%;
   object-fit: contain;
 }
+.grid-card__meta .tabular {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
 .grid-card__meta {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -561,8 +632,10 @@ body {
   gap: 3px;
   width: 132px;
   padding: 22px 14px 14px;
-  background: var(--color-kost);
-  color: var(--color-noc);
+  background:
+    radial-gradient(120% 80% at 30% 20%, rgb(255 255 255 / 0.12), transparent 60%),
+    var(--color-karton);
+  color: var(--color-karton-tinta);
   transform: translate(-10%, 40%) rotate(-4deg);
   transform-origin: 50% 0;
   box-shadow: 0 18px 40px rgb(0 0 0 / 0.5);
@@ -590,18 +663,25 @@ body {
   background: var(--color-nit);
 }
 .hang-tag__no {
-  font-size: 11px;
-  opacity: 0.6;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0.65;
 }
 .hang-tag__name {
   font-family: var(--font-display);
-  font-size: 24px;
-  line-height: 1;
+  font-size: 25px;
+  font-stretch: 80%;
+  font-weight: 760;
+  line-height: 0.95;
   letter-spacing: -0.02em;
 }
 .hang-tag__price {
-  font-size: 13px;
-  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px dashed rgb(42 33 24 / 0.4);
 }
 @keyframes tag-in {
   from {
@@ -642,7 +722,9 @@ body {
 }
 .product__price {
   margin-top: 22px;
-  font-size: 21px;
+  font-family: var(--font-mono);
+  font-size: 19px;
+  letter-spacing: 0.02em;
 }
 .product__summary {
   margin-top: 16px;
@@ -659,7 +741,10 @@ body {
 .product__facts dt {
   margin-top: 18px;
   color: var(--color-siva);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .product__stage-hint {
   position: fixed;
@@ -715,7 +800,10 @@ body {
   margin-top: 30px;
 }
 .sizes legend {
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-siva);
   display: flex;
   gap: 12px;
@@ -741,8 +829,9 @@ body {
   height: 42px;
   padding: 0 10px;
   border: 1px solid var(--color-linija);
-  border-radius: 3px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
 }
@@ -750,8 +839,9 @@ body {
   border-color: rgb(233 228 218 / 0.4);
 }
 .size input:checked + span {
-  border: 1.5px dashed var(--color-nit);
-  background: rgb(81 98 214 / 0.12);
+  border: 1.5px dashed var(--color-sav);
+  background: rgb(214 160 74 / 0.1);
+  color: var(--color-kost);
 }
 .size input:focus-visible + span {
   outline: 1.5px solid var(--color-nit);
@@ -984,7 +1074,10 @@ body {
 .site-footer {
   position: relative;
   background: var(--color-noc);
-  border-top: 1px solid var(--color-linija);
+  /* selvedge rub: bijela traka s crvenom niti, kao na rubu denima */
+  border-top: 0;
+  background-image: linear-gradient(180deg, #e9e4da 0 3px, #b8443a 3px 4px, #e9e4da 4px 6px, transparent 6px);
+  background-repeat: no-repeat;
   padding: 72px 16px 40px;
   display: grid;
   gap: 48px;
@@ -1001,12 +1094,16 @@ body {
   font-size: 14px;
 }
 .site-footer__facts dt {
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-siva);
 }
 .site-footer__note {
   grid-column: 1 / -1;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   color: var(--color-siva);
 }
 

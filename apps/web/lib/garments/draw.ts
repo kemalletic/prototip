@@ -350,7 +350,7 @@ class Painter {
     c.translate(x, y);
     if (!this.front) c.scale(-1, 1);
     c.fillStyle = color;
-    c.font = `600 ${size}px Georgia, serif`;
+    c.font = `800 ${size}px "Bricolage Grotesque Variable", "Arial Black", sans-serif`;
     c.textAlign = "center";
     c.textBaseline = "middle";
     c.fillText(str, 0, 0);

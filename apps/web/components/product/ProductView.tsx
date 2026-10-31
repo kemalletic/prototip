@@ -85,8 +85,8 @@ export function ProductView({ slug }: { slug: string }) {
         <button type="button" className="link-quiet text-sm" onClick={back}>
           Nazad na kolekciju
         </button>
-        <p className="mt-8 text-sm text-siva tabular">
-          {`${formatNo(p.no)}, ${categorySingular(p.category).toLowerCase()}`}
+        <p className="tag-label mt-8 text-siva">
+          {`${formatNo(p.no)} · ${categorySingular(p.category)}`}
         </p>
         <h1 id="proizvod-naslov" className="display product__title">
           {p.name}

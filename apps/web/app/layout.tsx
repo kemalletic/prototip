@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/bodoni-moda";
+import "@fontsource-variable/bricolage-grotesque/standard.css";
+import "@fontsource/dm-mono/latin-400.css";
+import "@fontsource/dm-mono/latin-ext-400.css";
+import "@fontsource/dm-mono/latin-500.css";
+import "@fontsource/dm-mono/latin-ext-500.css";
 import "@fontsource-variable/schibsted-grotesk";
 import "./globals.css";
 import { Shell } from "@/components/Shell";

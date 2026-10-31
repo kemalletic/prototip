@@ -91,7 +91,7 @@ export function drawDrape(back: boolean, width: number) {
     c.fillRect(0, 0, 120, 64);
     c.shadowColor = "transparent";
     c.fillStyle = "#1a1d2e";
-    c.font = "600 34px Georgia, serif";
+    c.font = '800 36px "Bricolage Grotesque Variable", "Arial Black", sans-serif';
     c.textAlign = "center";
     c.textBaseline = "middle";
     c.fillText("NIT", 60, 34);
