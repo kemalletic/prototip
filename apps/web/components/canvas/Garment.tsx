@@ -61,9 +61,11 @@ interface Props {
   visible: boolean;
   focused: boolean;
   hangerStyle?: HangerStyle;
+  /** Baršunasti sjaj vlakana (MeshPhysicalMaterial.sheen). */
+  sheen?: boolean;
 }
 
-export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props) {
+export function Garment({ p, x, visible, focused, hangerStyle = "wood", sheen = false }: Props) {
   const pivot = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
   const [tex, setTex] = useState<Pair | null>(null);
@@ -93,7 +95,10 @@ export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props)
   const depth = DEPTH[p.kind];
   const mats = useMemo(() => {
     const mk = () =>
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshPhysicalMaterial({
+        sheen: sheen && p.fabric !== "leather" ? 1 : 0,
+        sheenRoughness: 0.7,
+        sheenColor: new THREE.Color(p.color).lerp(new THREE.Color("#ffffff"), 0.45).multiplyScalar(0.55),
         roughness: ROUGH[p.fabric],
         metalness: 0,
         alphaTest: 0.5,
@@ -105,12 +110,12 @@ export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props)
     const dm = () =>
       new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, alphaTest: 0.5, displacementScale: depth });
     return { front: mk(), back: mk(), frontDepth: dm(), backDepth: dm() };
-  }, [p, depth]);
+  }, [p, depth, sheen]);
 
   useEffect(() => {
     const t = hi ?? tex;
     if (!t) return;
-    const apply = (m: THREE.MeshStandardMaterial, d: THREE.MeshDepthMaterial, g: GarmentTex) => {
+    const apply = (m: THREE.MeshPhysicalMaterial, d: THREE.MeshDepthMaterial, g: GarmentTex) => {
       m.map = g.map;
       m.normalMap = g.normalMap;
       m.displacementMap = g.displacementMap;

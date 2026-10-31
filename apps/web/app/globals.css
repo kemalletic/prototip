@@ -1619,3 +1619,78 @@ html:not([data-tema="noc"]) .collection--rail .collection__title {
     display: none;
   }
 }
+
+/* ============================================================ Bojadisaonica (?tema=boja) */
+
+html[data-tema="boja"] {
+  --zona-bg: #b07a2c;
+  --zona-fg: #f7eedf;
+  --color-kost: var(--zona-fg);
+  --color-kost-2: color-mix(in srgb, var(--zona-fg) 78%, var(--zona-bg));
+  --color-siva: color-mix(in srgb, var(--zona-fg) 62%, var(--zona-bg));
+  --color-linija: color-mix(in srgb, var(--zona-fg) 22%, transparent);
+  --scrim: 0 0 0;
+  background: var(--zona-bg);
+  transition: background-color 0.9s var(--ease-teska), color 0.9s var(--ease-teska);
+}
+html[data-tema="boja"] .wm__letters,
+html[data-tema="boja"] .wm__over {
+  fill: var(--zona-fg);
+  transition: fill 0.9s;
+}
+html[data-tema="boja"] .wm__thread,
+html[data-tema="boja"] .wm__knot {
+  stroke: #e9c48a;
+  fill: none;
+}
+html[data-tema="boja"] .wm__knot {
+  fill: #e9c48a;
+}
+html[data-tema="boja"] .rail-index::before,
+html[data-tema="boja"] .collection__head::before {
+  display: none;
+}
+html[data-tema="boja"] .display {
+  font-variation-settings: "wdth" 64;
+  font-weight: 780;
+}
+html[data-tema="boja"] .lookbook,
+html[data-tema="boja"] .site-footer,
+html[data-tema="boja"] .collection--grid {
+  --color-kost: #1a1611;
+  --color-kost-2: #4b463f;
+  --color-siva: #7a746a;
+  --color-linija: rgb(29 27 24 / 0.13);
+  --color-noc: #efe6d6;
+  background: #efe6d6;
+  color: #1a1611;
+}
+html[data-tema="boja"] .site-header .wordmark,
+html[data-tema="boja"] .site-header nav,
+html[data-tema="boja"] .collection__head > div:first-child,
+html[data-tema="boja"] .collection__controls,
+html[data-tema="boja"] .rail-index ol {
+  background: color-mix(in srgb, var(--zona-bg) 80%, transparent);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border-radius: 6px;
+  padding: 8px 14px;
+  transition: background-color 0.9s var(--ease-teska);
+}
+html[data-tema="boja"] .site-header .wordmark,
+html[data-tema="boja"] .site-header nav {
+  border-radius: 999px;
+}
+html[data-tema="boja"] .rail-index ol {
+  padding: 2px 14px 8px;
+}
+html[data-tema="boja"] .rail-index__hint {
+  display: none;
+}
+html[data-tema="boja"] .collection__head > div:first-child {
+  padding: 10px 16px 12px;
+}
+
+html[data-tema="boja"] .hero {
+  text-shadow: 0 1px 24px rgb(40 20 0 / 0.35);
+}

@@ -8,7 +8,7 @@ import { hashString, rng } from "@/lib/garments/color";
 import { heightToNormal } from "@/lib/garments/normal";
 import { drapeTextures } from "@/lib/garments/textures";
 import { useStore } from "@/lib/store";
-import { CATEGORY_TINT, type SceneLook } from "@/lib/theme";
+import { CATEGORY_TINT, DYE, type SceneLook } from "@/lib/theme";
 import { SPACING, WALL_Z } from "@/lib/world";
 
 const WALL_W = 40;
@@ -72,19 +72,20 @@ function plasterMaps() {
 }
 
 /** Ciljne boje zida po x: svaka kategorija daje topli ton iza svojih komada. */
-function tintTargets(geo: THREE.BufferGeometry, base: string, filter: string) {
+function tintTargets(geo: THREE.BufferGeometry, base: string, filter: string, dye = false) {
   const visible = PRODUCTS.filter((p) => filter === "sve" || p.category === filter);
-  const slots = visible.map((p, i) => ({ x: i * SPACING, c: new THREE.Color(CATEGORY_TINT[p.category]) }));
+  const slots = visible.map((p, i) => ({ x: i * SPACING, c: new THREE.Color(dye ? DYE[p.category].wall : CATEGORY_TINT[p.category]) }));
   const baseC = new THREE.Color(base);
   const pos = geo.attributes.position;
   const out = new Float32Array(pos.count * 3);
   const tmp = new THREE.Color();
   for (let i = 0; i < pos.count; i++) {
     const wx = pos.getX(i) + WALL_X;
-    let wsum = 0.35;
-    tmp.copy(baseC).multiplyScalar(0.35);
+    const bw = dye ? (wx < -0.6 ? 1.2 : 0.02) : 0.35;
+    let wsum = bw;
+    tmp.copy(baseC).multiplyScalar(bw);
     for (const s of slots) {
-      const d = (wx - s.x) / 0.85;
+      const d = (wx - s.x) / (dye ? 0.62 : 0.85);
       const w = Math.exp(-d * d);
       if (w < 0.002) continue;
       tmp.r += s.c.r * w;
@@ -92,9 +93,15 @@ function tintTargets(geo: THREE.BufferGeometry, base: string, filter: string) {
       tmp.b += s.c.b * w;
       wsum += w;
     }
-    out[i * 3] = tmp.r / wsum;
-    out[i * 3 + 1] = tmp.g / wsum;
-    out[i * 3 + 2] = tmp.b / wsum;
+    // zid je tamniji uz plafon i pod (dubina prostora)
+    let v = 1;
+    if (dye) {
+      const wy = pos.getY(i) + WALL_H / 2 - 1;
+      v = 1 - 0.32 * Math.max(0, Math.min(1, (wy - 2.6) / 1.4)) - 0.22 * Math.max(0, Math.min(1, (0.5 - wy) / 0.5));
+    }
+    out[i * 3] = (tmp.r / wsum) * v;
+    out[i * 3 + 1] = (tmp.g / wsum) * v;
+    out[i * 3 + 2] = (tmp.b / wsum) * v;
   }
   return out;
 }
@@ -141,14 +148,17 @@ export function Room({ look }: { look: SceneLook }) {
   const filter = useStore((s) => s.filter);
   const plaster = useMemo(() => (look.plaster ? plasterMaps() : null), [look.plaster]);
   const wallGeo = useMemo(() => {
-    const g = new THREE.PlaneGeometry(WALL_W, WALL_H, look.tint ? 320 : 1, 1);
+    const g = new THREE.PlaneGeometry(WALL_W, WALL_H, look.tint ? 320 : 1, look.dye ? 18 : 1);
     if (look.tint) {
       const n = g.attributes.position.count;
       g.setAttribute("color", new THREE.BufferAttribute(new Float32Array(n * 3).fill(1), 3));
     }
     return g;
-  }, [look.tint]);
-  const target = useMemo(() => (look.tint ? tintTargets(wallGeo, look.wall, filter) : null), [wallGeo, look.wall, look.tint, filter]);
+  }, [look.tint, look.dye]);
+  const target = useMemo(
+    () => (look.tint ? tintTargets(wallGeo, look.heroWall, filter, look.dye) : null),
+    [wallGeo, look.heroWall, look.tint, look.dye, filter],
+  );
   const first = useMemo(() => ({ done: false }), []);
   // brušeni beton: ista tekstura kreča, krupnije ponavljanje
   const floorMaps = useMemo(() => {
@@ -210,7 +220,7 @@ export function Room({ look }: { look: SceneLook }) {
           <meshStandardMaterial color={look.floor} roughness={0.7} />
         )}
       </mesh>
-      {look.tint && <DenimPanel filter={filter} />}
+      {look.tint && !look.dye && <DenimPanel filter={filter} />}
     </group>
   );
 }
