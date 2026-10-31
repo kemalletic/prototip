@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ambientAuto, getAmbient, visitorCity } from "@/lib/ambient";
+import { getAmbient, visitorCity } from "@/lib/ambient";
 import { isTouch } from "@/lib/device-tier";
 import { drapePreview } from "@/lib/garments/thumbs";
 import { scrollToY } from "@/lib/scroll";
@@ -20,7 +20,7 @@ export function Hero() {
     setTouch(isTouch());
     const DOE = (window as unknown as { DeviceOrientationEvent?: OrientationPermission }).DeviceOrientationEvent;
     setNeedsMotion(!!DOE?.requestPermission);
-    if (ambientAuto()) setAmbient({ label: getAmbient().label, city: visitorCity() });
+    setAmbient({ label: getAmbient().label, city: visitorCity() });
   }, []);
 
   useEffect(() => {
