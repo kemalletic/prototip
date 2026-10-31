@@ -17,8 +17,6 @@ export function Lights({ ambient, look }: { ambient: Ambient; look: SceneLook })
   const spot = useRef<THREE.SpotLight>(null);
   const wash = useRef<THREE.SpotLight>(null);
   const win = useRef<THREE.SpotLight>(null);
-  const rim = useRef<THREE.SpotLight>(null);
-  const rimTarget = useMemo(() => new THREE.Object3D(), []);
   const target = useMemo(() => new THREE.Object3D(), []);
   const washTarget = useMemo(() => new THREE.Object3D(), []);
   const winTarget = useMemo(() => new THREE.Object3D(), []);
@@ -35,11 +33,6 @@ export function Lights({ ambient, look }: { ambient: Ambient; look: SceneLook })
     s.angle = THREE.MathUtils.damp(s.angle, product ? look.spotAngle * 0.6 : look.spotAngle, 3, dt);
     w.position.set(L.x, 4.2, 1.2);
     washTarget.position.set(L.x, 1.5, WALL_Z);
-    if (rim.current) {
-      // kontra svjetlo iza komada ocrtava rubove
-      rim.current.position.set(L.x + 0.4, 3.0, WALL_Z + 0.22);
-      rimTarget.position.set(L.x - 0.2, 1.2, 2.4);
-    }
     if (win.current) {
       win.current.position.set(L.x - 3.4, 4.4, 3.6);
       winTarget.position.set(L.x + 0.9, 1.7, WALL_Z);
@@ -48,13 +41,7 @@ export function Lights({ ambient, look }: { ambient: Ambient; look: SceneLook })
 
   return (
     <>
-      <hemisphereLight args={[look.dye ? "#e6ecff" : "#fff3e4", look.ground, look.fill]} />
-      {look.rim > 0 && (
-        <>
-          <spotLight ref={rim} target={rimTarget} color="#dfe8ff" intensity={look.rim} angle={0.95} penumbra={1} decay={2} distance={0} />
-          <primitive object={rimTarget} />
-        </>
-      )}
+      <hemisphereLight args={["#fff3e4", look.ground, look.fill]} />
       <spotLight
         ref={spot}
         target={target}

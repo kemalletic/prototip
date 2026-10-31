@@ -7,7 +7,6 @@ import { thumbnail } from "@/lib/garments/thumbs";
 import { formatPrice } from "@/lib/region";
 import { scrollToY } from "@/lib/scroll";
 import { live, useStore } from "@/lib/store";
-import { DYE, HERO_DYE } from "@/lib/theme";
 
 const VH_PER_ITEM = 38;
 
@@ -42,15 +41,6 @@ export function Collection() {
       if (idx !== lastIdx) {
         lastIdx = idx;
         setCurrent(idx);
-      }
-      // Bojadisaonica: stranica preuzima boju zone
-      if (document.documentElement.dataset.tema === "boja") {
-        const dye = live.heroP < 0.55 || !rail ? HERO_DYE : DYE[items[Math.max(0, idx)]?.category ?? "jakne"];
-        const root = document.documentElement.style;
-        if (root.getPropertyValue("--zona-bg") !== dye.wall) {
-          root.setProperty("--zona-bg", dye.wall);
-          root.setProperty("--zona-fg", dye.fg);
-        }
       }
     };
     tick();
