@@ -27,6 +27,11 @@ export const DEPTH: Record<GarmentKind, number> = {
   jeans: 0.045,
   trousers: 0.04,
   belt: 0.012,
+  parka: 0.06,
+  bomber: 0.07,
+  softshell: 0.05,
+  fleecevest: 0.07,
+  quiltvest: 0.05,
 };
 
 export type HangerKind = "top" | "clip" | "hook";

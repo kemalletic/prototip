@@ -21,6 +21,7 @@ const ROUGH: Record<Fabric, number> = {
   wool: 0.86,
   twill: 0.78,
   leather: 0.48,
+  softshell: 0.72,
 };
 
 let sharedGeo: THREE.PlaneGeometry | null = null;

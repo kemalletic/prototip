@@ -51,8 +51,8 @@ export function Hero() {
           od tkanine.
         </h1>
         <p className="hero__lede">
-          Farmerke, jakne, džemperi i sve između, krojeno za BiH i region. Dostava u Bosnu i Hercegovinu, Srbiju, Hrvatsku i
-          Crnu Goru.
+          Farmerke, jakne, prsluci i džemperi za svaki dan, napravljeni da traju. Dostava u BiH, Srbiju, Hrvatsku i Crnu
+          Goru.
         </p>
         {tier === "full" && (
           <p className="hero__hint">

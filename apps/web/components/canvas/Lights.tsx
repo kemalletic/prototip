@@ -41,14 +41,14 @@ export function Lights({ ambient, look }: { ambient: Ambient; look: SceneLook })
 
   return (
     <>
-      <hemisphereLight args={["#fff3e4", look.concrete ? "#3a3632" : "#0b0b0c", look.fill]} />
+      <hemisphereLight args={["#fff3e4", look.ground, look.fill]} />
       <spotLight
         ref={spot}
         target={target}
         color={ambient.spot}
         intensity={ambient.spotIntensity * look.spot}
         angle={look.spotAngle}
-        penumbra={look.concrete ? 0.95 : 0.85}
+        penumbra={look.plaster ? 0.95 : 0.85}
         decay={2}
         distance={0}
         castShadow
