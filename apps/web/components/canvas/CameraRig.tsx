@@ -60,7 +60,7 @@ export function CameraRig() {
       }
       // šina
       const railH = portrait ? Math.max(2.75, 1.2 / aspect) : 2.3;
-      const d = portrait ? railH / (2 * tanHalf) : distFor(3.4, 2.3);
+      const d = portrait ? railH / (2 * tanHalf) : distFor(3.0, 2.05);
       const x0 = rig.first - (portrait ? 0 : 0.55);
       const x1 = rig.last;
       const rx = x0 + (x1 - x0) * live.railP;
