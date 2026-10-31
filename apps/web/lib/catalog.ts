@@ -463,6 +463,56 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+// Šina ide redom kategorija, pa se zone boje na zidu nižu jedna za drugom.
+PRODUCTS.sort((a, b) => CATEGORIES.findIndex((c) => c.id === a.category) - CATEGORIES.findIndex((c) => c.id === b.category));
+
+/** Privremene zalihe za prototip (faza 2: iz backenda). */
+const STOCK: Record<string, number> = {
+  "jakna-bjelasnica": 4,
+  "jakna-kozara": 11,
+  "jakna-vranica": 6,
+  "jakna-cincar": 9,
+  "jakna-klekovaca": 3,
+  "prsluk-igman": 7,
+  "prsluk-ozren": 12,
+  "prsluk-konjuh": 5,
+  "dzemper-vlasic": 2,
+  "dzemper-zelengora": 8,
+  "farmerke-prenj": 14,
+  "farmerke-cvrsnica": 6,
+};
+const SOLD_OUT: Record<string, string[]> = {
+  "jakna-bjelasnica": ["XS", "XXL"],
+  "dzemper-vlasic": ["S", "M"],
+  "farmerke-prenj": ["30"],
+  "jakna-klekovaca": ["L"],
+};
+
+export const DROP = { no: 1, name: "Drop 01", season: "jesen 2026", next: "2026-11-21T18:00:00+01:00" };
+
+/** Koliko je komada ostalo (null = dovoljno, ne prikazujemo). */
+export const stockOf = (slug: string): number | null => STOCK[slug] ?? null;
+export const soldOutSizes = (slug: string): string[] => SOLD_OUT[slug] ?? [];
+
+/** Komadi koji se slažu uz ovaj: po jedan iz kategorija koje ga dopunjuju. */
+export function pairsWith(p: Product): Product[] {
+  const want: Record<Category, Category[]> = {
+    jakne: ["dzemperi", "farmerke", "kaisevi"],
+    prsluci: ["majice", "farmerke", "trenerke"],
+    dzemperi: ["pantalone", "jakne", "kaisevi"],
+    majice: ["farmerke", "prsluci", "jakne"],
+    trenerke: ["majice", "prsluci", "jakne"],
+    farmerke: ["majice", "jakne", "kaisevi"],
+    pantalone: ["dzemperi", "kaisevi", "jakne"],
+    kaisevi: ["farmerke", "pantalone", "majice"],
+  };
+  const seed = p.no;
+  return want[p.category].map((c, i) => {
+    const list = PRODUCTS.filter((x) => x.category === c);
+    return list[(seed + i) % list.length];
+  });
+}
+
 export const getProduct = (slug: string) => PRODUCTS.find((p) => p.slug === slug);
 
 export const categoryLabel = (c: Category) => CATEGORIES.find((x) => x.id === c)?.label ?? c;

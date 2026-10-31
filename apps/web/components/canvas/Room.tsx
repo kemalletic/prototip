@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { PRODUCTS } from "@/lib/catalog";
 import { hashString, rng } from "@/lib/garments/color";
 import { heightToNormal } from "@/lib/garments/normal";
+import { drapeTextures } from "@/lib/garments/textures";
 import { useStore } from "@/lib/store";
 import { CATEGORY_TINT, type SceneLook } from "@/lib/theme";
 import { SPACING, WALL_Z } from "@/lib/world";
@@ -98,6 +99,44 @@ function tintTargets(geo: THREE.BufferGeometry, base: string, filter: string) {
   return out;
 }
 
+/** Panel sirovog denima koji visi iza grupe farmerki. */
+function DenimPanel({ filter }: { filter: string }) {
+  const tex = useMemo(() => drapeTextures(), []);
+  const group = useMemo(() => new THREE.Group(), []);
+  const range = useMemo(() => {
+    const visible = PRODUCTS.filter((p) => filter === "sve" || p.category === filter);
+    const xs = visible.map((p, i) => (p.category === "farmerke" ? i * SPACING : null)).filter((x): x is number => x !== null);
+    if (!xs.length) return null;
+    return { x0: Math.min(...xs) - 0.62, x1: Math.max(...xs) + 0.62 };
+  }, [filter]);
+  const st = useMemo(() => ({ cx: range ? (range.x0 + range.x1) / 2 : 0, w: range ? range.x1 - range.x0 : 0.01, s: range ? 1 : 0 }), []);
+  const H = 2.2;
+  const top = 2.78;
+  useFrame((_, dt) => {
+    const k = 1 - Math.exp(-dt * 3);
+    const tx = range ? (range.x0 + range.x1) / 2 : st.cx;
+    const tw = range ? range.x1 - range.x0 : st.w;
+    st.cx += (tx - st.cx) * k;
+    st.w += (tw - st.w) * k;
+    st.s += ((range ? 1 : 0) - st.s) * k;
+    group.position.set(st.cx, top, WALL_Z + 0.03);
+    group.scale.set(st.w, Math.max(0.001, st.s), 1);
+    group.visible = st.s > 0.01;
+  });
+  return (
+    <primitive object={group}>
+      <mesh position={[0, -H / 2, 0]} receiveShadow>
+        <planeGeometry args={[1, H]} />
+        <meshStandardMaterial map={tex.front} normalMap={tex.frontNormal} roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.02, 0.012]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.009, 0.009, 1.04, 12]} />
+        <meshStandardMaterial color="#141414" metalness={0.6} roughness={0.4} />
+      </mesh>
+    </primitive>
+  );
+}
+
 export function Room({ look }: { look: SceneLook }) {
   const filter = useStore((s) => s.filter);
   const plaster = useMemo(() => (look.plaster ? plasterMaps() : null), [look.plaster]);
@@ -111,6 +150,16 @@ export function Room({ look }: { look: SceneLook }) {
   }, [look.tint]);
   const target = useMemo(() => (look.tint ? tintTargets(wallGeo, look.wall, filter) : null), [wallGeo, look.wall, look.tint, filter]);
   const first = useMemo(() => ({ done: false }), []);
+  // brušeni beton: ista tekstura kreča, krupnije ponavljanje
+  const floorMaps = useMemo(() => {
+    if (!plaster) return null;
+    const map = plaster.map.clone();
+    const normal = plaster.normal.clone();
+    map.repeat.set(WALL_W / 3, FLOOR_D / 3);
+    normal.repeat.set(WALL_W / 3, FLOOR_D / 3);
+    map.needsUpdate = normal.needsUpdate = true;
+    return { map, normal };
+  }, [plaster]);
 
   // boja zida se meko pretapa kad se promijeni filter
   useFrame((_, dt) => {
@@ -155,8 +204,13 @@ export function Room({ look }: { look: SceneLook }) {
       </mesh>
       <mesh position={[WALL_X, 0, WALL_Z + FLOOR_D / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[WALL_W, FLOOR_D]} />
-        <meshStandardMaterial color={look.floor} roughness={0.7} />
+        {floorMaps ? (
+          <meshStandardMaterial color={look.floor} map={floorMaps.map} normalMap={floorMaps.normal} roughness={0.55} envMapIntensity={0.5} />
+        ) : (
+          <meshStandardMaterial color={look.floor} roughness={0.7} />
+        )}
       </mesh>
+      {look.tint && <DenimPanel filter={filter} />}
     </group>
   );
 }

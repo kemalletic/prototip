@@ -32,6 +32,7 @@ interface State {
   set: (p: Partial<State>) => void;
   addToCart: (slug: string, size: string) => void;
   removeLine: (i: number) => void;
+  setLineSize: (i: number, size: string) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -60,6 +61,7 @@ export const useStore = create<State>((set) => ({
       return { cart };
     }),
   removeLine: (i) => set((s) => ({ cart: s.cart.filter((_, j) => j !== i) })),
+  setLineSize: (i, size) => set((s) => ({ cart: s.cart.map((l, j) => (j === i ? { ...l, size } : l)) })),
 }));
 
 /**

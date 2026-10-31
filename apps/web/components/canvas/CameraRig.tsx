@@ -65,7 +65,7 @@ export function CameraRig() {
       const x1 = rig.last;
       const rx = x0 + (x1 - x0) * live.railP;
       // na telefonu šipka ide ispod zaglavlja kolekcije (oko 27% visine)
-      const ly = portrait ? 2.32 + 0.27 * railH - railH / 2 : 1.7;
+      const ly = portrait ? 2.32 + 0.27 * railH - railH / 2 : 1.76;
       lb.set(rx, ly, 0);
       b.set(rx, ly + 0.06, d);
       const t = smooth(Math.min(1, live.heroP));

@@ -12,6 +12,7 @@ export function Cart() {
   const region = useStore((s) => s.region);
   const set = useStore((s) => s.set);
   const removeLine = useStore((s) => s.removeLine);
+  const setLineSize = useStore((s) => s.setLineSize);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -58,9 +59,18 @@ export function Cart() {
                   <li key={`${l.slug}-${l.size}`} className="flex items-center gap-4 py-4">
                     {thumbs[l.slug] ? <img src={thumbs[l.slug]} alt="" className="h-20 w-16 object-contain" /> : <div className="h-20 w-16" />}
                     <div className="flex-1">
-                      <p className="font-display text-[21px] leading-tight">{p.name}</p>
+                      <p className="cart__name">{p.name}</p>
                       <p className="text-sm text-kost-2">
-                        Veličina {l.size}
+                        <label>
+                          Veličina{" "}
+                          <select className="cart__size" value={l.size} onChange={(e) => setLineSize(i, e.target.value)}>
+                            {p.sizes.map((s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
                         {l.qty > 1 ? `, ${l.qty} komada` : ""}
                       </p>
                       <button type="button" className="link-quiet mt-1 text-xs" onClick={() => removeLine(i)}>
