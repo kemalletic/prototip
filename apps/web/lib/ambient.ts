@@ -1,4 +1,5 @@
-// Svjetlo na sajtu prati doba dana kod posjetioca.
+// Svjetlo na sajtu: podrazumijevano je toplo večernje (izgled iz prvog videa).
+// ?sat=14 forsira sat, a ?sat=auto prati stvarno doba dana kod posjetioca.
 
 export type Phase = "jutro" | "dan" | "vece" | "noc";
 
@@ -26,12 +27,22 @@ export function phaseForHour(h: number): Phase {
   return "noc";
 }
 
+const DEFAULT_HOUR = 19;
+
+function satParam() {
+  return typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("sat");
+}
+
+/** True kad svjetlo prati stvarno doba dana (?sat=auto). */
+export function ambientAuto() {
+  return satParam() === "auto";
+}
+
 export function getAmbient(): Ambient {
-  let hour = new Date().getHours();
-  if (typeof window !== "undefined") {
-    const q = new URLSearchParams(window.location.search).get("sat");
-    if (q !== null && !Number.isNaN(Number(q))) hour = Number(q) % 24;
-  }
+  let hour = DEFAULT_HOUR;
+  const q = satParam();
+  if (q === "auto") hour = new Date().getHours();
+  else if (q !== null && !Number.isNaN(Number(q))) hour = Number(q) % 24;
   return AMBIENTS[phaseForHour(hour)];
 }
 
