@@ -8,7 +8,7 @@ import { hitMask } from "@/lib/garments/normal";
 import { garmentTextures, lensSource, schedule, type GarmentTex, type Side } from "@/lib/garments/textures";
 import { live, useStore } from "@/lib/store";
 import { DEPTH, designToLocal, FOCUS_Z, GH, GW, hangerFor, HOOK_DROP, ROD_Y } from "@/lib/world";
-import { Hanger, type HangerStyle } from "./Hanger";
+import { Hanger } from "./Hanger";
 import { rig } from "./rig";
 
 const ROUGH: Record<Fabric, number> = {
@@ -21,7 +21,6 @@ const ROUGH: Record<Fabric, number> = {
   wool: 0.86,
   twill: 0.78,
   leather: 0.48,
-  softshell: 0.72,
 };
 
 let sharedGeo: THREE.PlaneGeometry | null = null;
@@ -60,10 +59,9 @@ interface Props {
   x: number;
   visible: boolean;
   focused: boolean;
-  hangerStyle?: HangerStyle;
 }
 
-export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props) {
+export function Garment({ p, x, visible, focused }: Props) {
   const pivot = useRef<THREE.Group>(null);
   const spin = useRef<THREE.Group>(null);
   const [tex, setTex] = useState<Pair | null>(null);
@@ -267,7 +265,7 @@ export function Garment({ p, x, visible, focused, hangerStyle = "wood" }: Props)
   return (
     <group ref={pivot} position={[x, ROD_Y + (visible ? 0 : 2.4), 0]}>
       <group ref={spin}>
-        <Hanger kind={hangerFor(p.kind)} style={hangerStyle} />
+        <Hanger kind={hangerFor(p.kind)} />
         <group position={[0, centerY, 0]} visible={!!tex}>
           <mesh geometry={geo()} material={mats.front} customDepthMaterial={mats.frontDepth} castShadow receiveShadow {...handle("front")} />
           <mesh

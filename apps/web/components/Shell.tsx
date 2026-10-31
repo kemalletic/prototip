@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { detectTier } from "@/lib/device-tier";
 import { scroller } from "@/lib/scroll";
 import { live, useStore } from "@/lib/store";
-import { readTema } from "@/lib/theme";
 import { Cart } from "./Cart";
 import { HangTag } from "./HangTag";
 import { Header } from "./Header";
@@ -21,12 +20,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const tier = useStore((s) => s.tier);
-
-  useEffect(() => {
-    const tema = readTema();
-    document.documentElement.dataset.tema = tema;
-    useStore.getState().set({ tema });
-  }, []);
 
   useEffect(() => {
     const t = detectTier();

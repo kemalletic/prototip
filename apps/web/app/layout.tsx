@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/bodoni-moda";
 import "@fontsource-variable/schibsted-grotesk";
-import "@fontsource-variable/archivo/wdth.css";
 import "./globals.css";
 import { Shell } from "@/components/Shell";
 

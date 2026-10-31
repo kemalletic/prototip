@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { REGIONS, type RegionId } from "@/lib/region";
 import { useStore } from "@/lib/store";
-import { Wordmark } from "./brand/Wordmark";
 
 export function Header() {
   const region = useStore((s) => s.region);
@@ -14,12 +13,12 @@ export function Header() {
   return (
     <header className="site-header pointer-events-none fixed inset-x-0 top-0 z-40 flex h-16 items-center justify-between px-4 md:h-20 md:px-10">
       <Link href="/" className="wordmark pointer-events-auto" aria-label="NIT, početna">
-        <Wordmark className="wordmark__svg" />
+        <span className="display text-[28px] md:text-[32px]">NIT</span>
+        <svg className="wordmark__thread" viewBox="0 0 60 8" aria-hidden>
+          <path d="M1 4 C 12 1, 18 7, 30 4 S 48 1, 59 4" />
+        </svg>
       </Link>
       <nav className="pointer-events-auto flex items-center gap-4 text-[13px] md:gap-7 md:text-sm" aria-label="Glavna">
-        <a href="/#lookbook" className="link-quiet hidden md:inline">
-          Lookbook
-        </a>
         <label className="select-wrap">
           <span className="sr-only">Država i valuta</span>
           <select value={region} onChange={(e) => set({ region: e.target.value as RegionId })}>

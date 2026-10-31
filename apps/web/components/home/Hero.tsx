@@ -6,8 +6,6 @@ import { isTouch } from "@/lib/device-tier";
 import { drapePreview } from "@/lib/garments/thumbs";
 import { scrollToY } from "@/lib/scroll";
 import { useStore } from "@/lib/store";
-import { Patch } from "../brand/Wordmark";
-import { DropCountdown } from "./DropCountdown";
 
 type OrientationPermission = { requestPermission?: () => Promise<"granted" | "denied"> };
 
@@ -47,15 +45,14 @@ export function Hero() {
         </div>
       )}
       <div className="hero__copy">
-        <Patch>Drop 01, jesen 2026</Patch>
         <h1 id="hero-naslov" className="display hero__title">
           Sve počinje
           <br />
           od tkanine.
         </h1>
         <p className="hero__lede">
-          Farmerke, jakne, prsluci i džemperi za svaki dan, napravljeni da traju. Dostava u BiH, Srbiju, Hrvatsku i Crnu
-          Goru.
+          Farmerke, jakne, džemperi i sve između, krojeno za BiH i region. Dostava u Bosnu i Hercegovinu, Srbiju, Hrvatsku i
+          Crnu Goru.
         </p>
         {tier === "full" && (
           <p className="hero__hint">
@@ -80,15 +77,12 @@ export function Hero() {
           <span className="hero__down-thread" aria-hidden />
           Pogledaj kolekciju
         </button>
-        <div className="hero__ambient">
-          <DropCountdown />
-          {ambient && tier === "full" && (
-            <p>
-              Svjetlo prati tvoje doba dana: {ambient.label}
-              {ambient.city ? `, ${ambient.city}` : ""}
-            </p>
-          )}
-        </div>
+        {ambient && tier === "full" && (
+          <p className="hero__ambient">
+            Svjetlo prati tvoje doba dana: {ambient.label}
+            {ambient.city ? `, ${ambient.city}` : ""}
+          </p>
+        )}
       </div>
     </section>
   );

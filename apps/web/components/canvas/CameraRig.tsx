@@ -60,12 +60,12 @@ export function CameraRig() {
       }
       // šina
       const railH = portrait ? Math.max(2.75, 1.2 / aspect) : 2.3;
-      const d = portrait ? railH / (2 * tanHalf) : distFor(3.0, 2.05);
+      const d = portrait ? railH / (2 * tanHalf) : distFor(3.4, 2.3);
       const x0 = rig.first - (portrait ? 0 : 0.55);
       const x1 = rig.last;
       const rx = x0 + (x1 - x0) * live.railP;
       // na telefonu šipka ide ispod zaglavlja kolekcije (oko 27% visine)
-      const ly = portrait ? 2.32 + 0.27 * railH - railH / 2 : 1.76;
+      const ly = portrait ? 2.32 + 0.27 * railH - railH / 2 : 1.7;
       lb.set(rx, ly, 0);
       b.set(rx, ly + 0.06, d);
       const t = smooth(Math.min(1, live.heroP));

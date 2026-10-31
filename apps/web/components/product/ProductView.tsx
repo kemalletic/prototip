@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { categorySingular, DROP, getProduct, pairsWith, soldOutSizes, stockOf } from "@/lib/catalog";
-import { Patch, Rivet, Selvedge } from "../brand/Wordmark";
+import { categorySingular, formatNo, getProduct } from "@/lib/catalog";
 import { largeCanvas, thumbnail } from "@/lib/garments/thumbs";
 import { formatPrice } from "@/lib/region";
 import { live, useStore } from "@/lib/store";
@@ -21,18 +20,6 @@ export function ProductView({ slug }: { slug: string }) {
   const [size, setSize] = useState<string | null>(null);
   const [warn, setWarn] = useState(false);
   const [added, setAdded] = useState(false);
-  const stock = stockOf(p.slug);
-  const soldOut = soldOutSizes(p.slug);
-  const pairs = pairsWith(p);
-  const [thumbs, setThumbs] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const next: Record<string, string> = {};
-    for (const q of pairsWith(p)) next[q.slug] = thumbnail(q, "front", 260);
-    setThumbs(next);
-    setSize(null);
-    setAdded(false);
-  }, [p]);
 
   useEffect(() => {
     live.rotate = 0;
@@ -98,22 +85,14 @@ export function ProductView({ slug }: { slug: string }) {
         <button type="button" className="link-quiet text-sm" onClick={back}>
           Nazad na kolekciju
         </button>
-        <p className="product__meta">
-          <Patch>{DROP.name}</Patch>
-          <span className="label-wide text-siva">{categorySingular(p.category)}</span>
+        <p className="mt-8 text-sm text-siva tabular">
+          {`${formatNo(p.no)}, ${categorySingular(p.category).toLowerCase()}`}
         </p>
         <h1 id="proizvod-naslov" className="display product__title">
           {p.name}
         </h1>
         <p className="mt-2 text-kost-2">{p.colorName}</p>
-        <div className="product__priceline">
-          <p className="product__price tabular">{formatPrice(p.price, region)}</p>
-          {stock !== null && stock <= 8 && (
-            <p className="product__stock">
-              <Rivet /> Ostalo još {stock} {stock === 1 ? "komad" : "komada"}
-            </p>
-          )}
-        </div>
+        <p className="product__price tabular">{formatPrice(p.price, region)}</p>
         <p className="product__summary">{p.summary}</p>
 
         <fieldset className="sizes">
@@ -127,13 +106,11 @@ export function ProductView({ slug }: { slug: string }) {
           </legend>
           <div className="sizes__row">
             {p.sizes.map((s) => (
-              <label key={s} className="size" data-out={soldOut.includes(s) || undefined}>
+              <label key={s} className="size">
                 <input
                   type="radio"
                   name="velicina"
                   value={s}
-                  disabled={soldOut.includes(s)}
-                  aria-label={soldOut.includes(s) ? `${s}, rasprodato` : s}
                   checked={size === s}
                   onChange={() => {
                     setSize(s);
@@ -161,45 +138,14 @@ export function ProductView({ slug }: { slug: string }) {
           </button>
         )}
 
-        <ul className="product__promise">
-          <li>
-            <strong>Dostava</strong>
-            <span>2 do 4 radna dana</span>
-          </li>
-          <li>
-            <strong>Povrat</strong>
-            <span>14 dana, besplatno</span>
-          </li>
-          <li>
-            <strong>Plaćanje</strong>
-            <span>Pouzećem ili karticom</span>
-          </li>
-        </ul>
-
-        <Selvedge className="mt-8" />
         <dl className="product__facts">
-          <dt>Materijal i izrada</dt>
+          <dt>Materijal</dt>
           {p.materials.map((m) => (
             <dd key={m}>{m}</dd>
           ))}
+          <dt>Dostava</dt>
+          <dd>BiH dva radna dana, region tri do četiri. Plaćanje pouzećem ili karticom.</dd>
         </dl>
-
-        <section className="pairs" aria-labelledby="slaze-se">
-          <h2 id="slaze-se" className="pairs__title">
-            Slaže se uz
-          </h2>
-          <ul className="pairs__list">
-            {pairs.map((q) => (
-              <li key={q.slug}>
-                <Link href={`/proizvod/${q.slug}`} className="pairs__item" scroll={false}>
-                  <span className="pairs__img">{thumbs[q.slug] && <img src={thumbs[q.slug]} alt="" />}</span>
-                  <span className="pairs__name">{q.name}</span>
-                  <span className="pairs__price tabular">{formatPrice(q.price, region)}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
         <Link href="/#kolekcija" className="sr-only">
           Sva kolekcija
         </Link>

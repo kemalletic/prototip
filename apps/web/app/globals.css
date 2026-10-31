@@ -1,40 +1,21 @@
 @import "tailwindcss";
 
-/* Tokeni: "noc" je pozadina, "kost" je tekst (imena su iz prve, tamne verzije). */
 @theme {
-  --color-noc: #f1ebe1;
-  --color-noc-2: #f8f4ed;
-  --color-kost: #1d1b18;
-  --color-kost-2: #4b463f;
-  --color-siva: #7a746a;
-  --color-indigo: #2b3a8c;
-  --color-nit: #2b3a8c;
-  --color-linija: rgb(29 27 24 / 0.13);
-  --color-papir: #f6f0e5;
-  --font-display: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
-  --font-sans: "Archivo Variable", "Helvetica Neue", Arial, sans-serif;
-  --ease-teska: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-:root {
-  color-scheme: light;
-  --scrim: 241 235 225;
-}
-
-/* stara tamna verzija: ?tema=noc */
-html[data-tema="noc"] {
-  color-scheme: dark;
   --color-noc: #0b0b0c;
   --color-noc-2: #141413;
   --color-kost: #e9e4da;
   --color-kost-2: #bdb7ab;
   --color-siva: #8e887e;
+  --color-indigo: #2b3a8c;
   --color-nit: #5162d6;
   --color-linija: rgb(233 228 218 / 0.14);
-  --color-papir: #e9e4da;
   --font-display: "Bodoni Moda Variable", "Bodoni 72", Didot, serif;
   --font-sans: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
-  --scrim: 11 11 12;
+  --ease-teska: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: dark;
 }
 
 html {
@@ -71,12 +52,6 @@ body {
 
 .display {
   font-family: var(--font-display);
-  font-variation-settings: "wdth" 112;
-  font-weight: 540;
-  letter-spacing: -0.045em;
-  line-height: 0.95;
-}
-html[data-tema="noc"] .display {
   font-variation-settings: "opsz" 96;
   font-weight: 420;
   letter-spacing: -0.035em;
@@ -93,8 +68,7 @@ html[data-tema="noc"] .display {
   position: fixed;
   inset: -50%;
   z-index: 60;
-  opacity: 0.045;
-  mix-blend-mode: multiply;
+  opacity: 0.07;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation: grain 0.9s steps(4) infinite;
 }
@@ -154,7 +128,7 @@ html[data-tema="noc"] .display {
 /* ------------------------------------------------------------ zaglavlje */
 
 .site-header {
-  background: linear-gradient(180deg, rgb(var(--scrim) / 0.72), rgb(var(--scrim) / 0));
+  background: linear-gradient(180deg, rgb(11 11 12 / 0.72), rgb(11 11 12 / 0));
 }
 
 .wordmark {
@@ -300,7 +274,7 @@ html[data-tema="noc"] .display {
     content: "";
     position: absolute;
     inset: 46% 0 0;
-    background: linear-gradient(180deg, rgb(var(--scrim) / 0), rgb(var(--scrim) / 0.7) 22%, rgb(var(--scrim) / 0.85));
+    background: linear-gradient(180deg, rgb(11 11 12 / 0), rgb(11 11 12 / 0.7) 22%, rgb(11 11 12 / 0.85));
     pointer-events: none;
   }
   .hero__copy,
@@ -309,9 +283,6 @@ html[data-tema="noc"] .display {
   }
 }
 .hero__title {
-  font-size: clamp(46px, 7.2vw, 118px);
-}
-html[data-tema="noc"] .hero__title {
   font-size: clamp(50px, 9.2vw, 150px);
 }
 .hero__lede {
@@ -502,26 +473,6 @@ html[data-tema="noc"] .hero__title {
 
 .rail-index {
   pointer-events: auto;
-  position: relative;
-}
-html:not([data-tema="noc"]) .rail-index::before {
-  content: "";
-  position: absolute;
-  inset: -40px -40px -32px;
-  background: linear-gradient(180deg, rgb(var(--scrim) / 0), rgb(var(--scrim) / 0.78) 45%);
-  z-index: -1;
-  pointer-events: none;
-}
-html:not([data-tema="noc"]) .collection__head {
-  position: relative;
-}
-html:not([data-tema="noc"]) .collection__head::before {
-  content: "";
-  position: absolute;
-  inset: -90px -40px -24px;
-  background: linear-gradient(0deg, rgb(var(--scrim) / 0), rgb(var(--scrim) / 0.6) 50%);
-  z-index: -1;
-  pointer-events: none;
 }
 .rail-index ol {
   display: flex;
@@ -573,14 +524,14 @@ html:not([data-tema="noc"]) .collection__head::before {
 }
 .grid-card__img {
   aspect-ratio: 1000 / 1300;
-  background: radial-gradient(70% 60% at 50% 35%, color-mix(in srgb, var(--color-noc-2) 85%, var(--color-kost) 4%), var(--color-noc));
+  background: radial-gradient(70% 60% at 50% 35%, #1c1b19, #111110);
   display: grid;
   place-items: center;
   padding: 10%;
   transition: background 0.4s;
 }
 .grid-card:hover .grid-card__img {
-  background: radial-gradient(70% 60% at 50% 35%, color-mix(in srgb, var(--color-noc-2) 80%, var(--color-kost) 8%), var(--color-noc));
+  background: radial-gradient(70% 60% at 50% 35%, #262420, #121110);
 }
 .grid-card__img img {
   width: 100%;
@@ -668,7 +619,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   position: relative;
   padding: 0 16px 64px;
   margin-top: 58svh;
-  background: linear-gradient(180deg, rgb(var(--scrim) / 0) 0, rgb(var(--scrim) / 0.92) 60px, var(--color-noc) 140px);
+  background: linear-gradient(180deg, rgb(11 11 12 / 0) 0, rgb(11 11 12 / 0.92) 60px, var(--color-noc) 140px);
   padding-top: 60px;
 }
 @media (min-width: 900px) {
@@ -681,7 +632,7 @@ html:not([data-tema="noc"]) .collection__head::before {
     width: min(440px, 36vw);
     overflow-y: auto;
     padding: 104px 40px 48px;
-    background: linear-gradient(90deg, rgb(var(--scrim) / 0), rgb(var(--scrim) / 0.82) 22%);
+    background: linear-gradient(90deg, rgb(11 11 12 / 0), rgb(11 11 12 / 0.82) 22%);
     scrollbar-width: none;
   }
 }
@@ -770,7 +721,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   gap: 12px;
 }
 .sizes__warn {
-  color: #a4502c;
+  color: #e0a98a;
 }
 .sizes__row {
   margin-top: 10px;
@@ -827,7 +778,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgb(var(--scrim) / 0.4);
+  background: rgb(11 11 12 / 0.4);
   border: 1.5px solid var(--color-kost);
   box-shadow: 0 0 0 0 rgb(233 228 218 / 0.5);
   animation: dot-pulse 2.6s infinite;
@@ -847,7 +798,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   white-space: nowrap;
   font-size: 12px;
   padding: 6px 10px;
-  background: rgb(var(--scrim) / 0.85);
+  background: rgb(11 11 12 / 0.85);
   border-left: 1.5px solid var(--color-nit);
   opacity: 0;
   transition: opacity 0.25s, transform 0.35s var(--ease-teska);
@@ -899,7 +850,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   height: 76px;
   border: 1px solid var(--color-linija);
   border-radius: 4px;
-  background: var(--color-noc-2);
+  background: #121211;
   cursor: pointer;
   user-select: none;
   touch-action: pan-y;
@@ -919,7 +870,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   font-size: 15px;
 }
 .zip[data-done] .zip__label span:first-child {
-  color: var(--color-nit);
+  color: #9aa5f0;
 }
 .zip__teeth {
   position: absolute;
@@ -1011,7 +962,7 @@ html:not([data-tema="noc"]) .collection__head::before {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: repeating-linear-gradient(90deg, var(--color-noc-2) 0, color-mix(in srgb, var(--color-noc-2) 80%, var(--color-kost) 10%) 14px, var(--color-noc) 30px);
+  background: repeating-linear-gradient(90deg, #1b1a18 0, #2a2825 14px, #161513 30px);
   transform-origin: 100% 50%;
   transition: transform 0.9s 0.3s var(--ease-teska);
   pointer-events: none;
@@ -1074,548 +1025,4 @@ main .product__panel,
 main .product__static,
 main .site-footer {
   pointer-events: auto;
-}
-
-html[data-tema="noc"] .grain {
-  opacity: 0.07;
-  mix-blend-mode: normal;
-}
-
-/* nova etiketa: pamučni papir, nit i simboli za pranje */
-html:not([data-tema="noc"]) .hang-tag {
-  background: var(--color-papir);
-  color: var(--color-kost);
-  border-radius: 3px;
-  clip-path: none;
-  width: 150px;
-  padding: 26px 14px 14px;
-  box-shadow: 0 18px 40px rgb(28 26 23 / 0.28), inset 0 0 0 1px rgb(28 26 23 / 0.06);
-  background-image: radial-gradient(rgb(28 26 23 / 0.05) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
-.hang-tag::before {
-  width: 10px;
-  height: 10px;
-  margin-left: -5px;
-  top: 8px;
-  background: var(--color-noc);
-  box-shadow: 0 0 0 2.5px #a39d93;
-}
-.hang-tag__name {
-  font-family: var(--font-display);
-  font-variation-settings: "wdth" 112;
-  font-weight: 650;
-  font-size: 21px;
-  letter-spacing: -0.02em;
-}
-.hang-tag__care {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed rgb(28 26 23 / 0.25);
-  color: var(--color-siva);
-}
-.hang-tag__sizes {
-  font-size: 11px;
-  color: var(--color-siva);
-}
-
-
-/* studio: bez muzejskih brojeva */
-html:not([data-tema="noc"]) .rail-index__no,
-html:not([data-tema="noc"]) .hang-tag__no {
-  display: none;
-}
-html:not([data-tema="noc"]) .rail-index__name {
-  font-family: var(--font-display);
-  font-variation-settings: "wdth" 108;
-  font-weight: 560;
-  font-size: 16px;
-  letter-spacing: -0.01em;
-}
-html:not([data-tema="noc"]) .wordmark .display {
-  font-variation-settings: "wdth" 125;
-  font-weight: 760;
-  letter-spacing: 0.04em;
-  font-size: 22px;
-}
-
-/* ============================================================ brend sistem */
-
-:root {
-  --bakar-1: #f0b98c;
-  --bakar-2: #a8653a;
-  --bakar-3: #4a2a16;
-  --koza: #9c7248;
-}
-
-.wordmark__svg {
-  height: 26px;
-  width: auto;
-  overflow: visible;
-}
-@media (min-width: 768px) {
-  .wordmark__svg {
-    height: 30px;
-  }
-}
-.wm__letters,
-.wm__over {
-  fill: var(--color-kost);
-}
-.wm__thread {
-  fill: none;
-  stroke: var(--color-nit);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-dasharray: 200;
-  stroke-dashoffset: 0;
-}
-.wm__knot {
-  fill: var(--color-nit);
-}
-.wordmark:hover .wm__thread {
-  animation: wm-thread 1.2s var(--ease-teska);
-}
-@keyframes wm-thread {
-  from {
-    stroke-dashoffset: 200;
-  }
-}
-.wordmark .display,
-.wordmark__thread {
-  display: none;
-}
-
-.selvedge {
-  height: 7px;
-  background:
-    linear-gradient(180deg, transparent 0 3px, var(--color-nit) 3px 4.6px, transparent 4.6px),
-    linear-gradient(180deg, #fbf8f2, #ece5d8);
-  box-shadow: inset 0 -1px 0 rgb(29 27 24 / 0.08), inset 0 1px 0 rgb(29 27 24 / 0.06);
-}
-.selvedge--v {
-  width: 7px;
-  height: auto;
-  background:
-    linear-gradient(90deg, transparent 0 3px, var(--color-nit) 3px 4.6px, transparent 4.6px),
-    linear-gradient(90deg, #fbf8f2, #ece5d8);
-}
-
-.rivet {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--bakar-1), var(--bakar-2) 55%, var(--bakar-3));
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.35), inset 0 0 0 1.5px rgb(74 42 22 / 0.35);
-  flex: none;
-}
-
-.patch {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px 7px;
-  font-size: 12px;
-  font-weight: 600;
-  font-variation-settings: "wdth" 112;
-  letter-spacing: 0.02em;
-  color: #3b2614;
-  border-radius: 3px;
-  background:
-    radial-gradient(rgb(60 35 15 / 0.12) 1px, transparent 1.2px) 0 0 / 3px 3px,
-    linear-gradient(160deg, #b98a5c, var(--koza) 60%, #87603c);
-  box-shadow:
-    inset 0 0 0 1px rgb(60 35 15 / 0.35),
-    inset 0 0 0 4px rgb(255 240 220 / 0.0),
-    0 1px 0 rgb(255 255 255 / 0.4);
-  outline: 1.5px dashed rgb(60 35 15 / 0.35);
-  outline-offset: -5px;
-  text-shadow: 0 1px 0 rgb(255 225 190 / 0.35);
-}
-
-/* tipografija: jedna porodica, izražajne širine */
-html:not([data-tema="noc"]) .display {
-  font-variation-settings: "wdth" 64;
-  font-weight: 760;
-  letter-spacing: -0.012em;
-  line-height: 0.9;
-}
-html:not([data-tema="noc"]) .hero__title {
-  font-size: clamp(58px, 9.6vw, 164px);
-}
-html:not([data-tema="noc"]) .collection__title {
-  font-size: clamp(48px, 6vw, 96px);
-}
-html:not([data-tema="noc"]) .product__title {
-  font-size: clamp(60px, 7vw, 112px);
-}
-.label-wide {
-  font-variation-settings: "wdth" 118;
-  font-weight: 560;
-  font-size: 12px;
-  letter-spacing: 0.01em;
-}
-
-/* aktivni filter: zakovica umjesto šivene linije */
-html:not([data-tema="noc"]) .filters button[aria-pressed="true"],
-html:not([data-tema="noc"]) .view-toggle button[aria-pressed="true"] {
-  background: none;
-  position: relative;
-  padding-left: 15px;
-}
-html:not([data-tema="noc"]) .filters button[aria-pressed="true"]::before,
-html:not([data-tema="noc"]) .view-toggle button[aria-pressed="true"]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  margin-top: -4px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--bakar-1), var(--bakar-2) 55%, var(--bakar-3));
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
-}
-html:not([data-tema="noc"]) .size input:checked + span {
-  border: 1.5px solid var(--color-kost);
-  background: var(--color-kost);
-  color: var(--color-noc);
-}
-
-/* stranica proizvoda: identitet i povjerenje */
-.product__meta {
-  margin-top: 28px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.product__priceline {
-  margin-top: 20px;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 6px 18px;
-}
-.product__priceline .product__price {
-  margin-top: 0;
-  font-size: 24px;
-  font-weight: 560;
-}
-.product__stock {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #8a4b22;
-}
-.size[data-out] span {
-  color: var(--color-siva);
-  background: linear-gradient(to top right, transparent calc(50% - 0.75px), rgb(29 27 24 / 0.35) calc(50% - 0.75px), rgb(29 27 24 / 0.35) calc(50% + 0.75px), transparent calc(50% + 0.75px));
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-.product__promise {
-  margin-top: 22px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--color-linija);
-  border: 1px solid var(--color-linija);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.product__promise li {
-  background: var(--color-noc-2);
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 12px;
-  color: var(--color-kost-2);
-}
-.product__promise strong {
-  font-weight: 620;
-  color: var(--color-kost);
-  font-variation-settings: "wdth" 112;
-}
-.pairs {
-  margin-top: 32px;
-}
-.pairs__title {
-  font-size: 13px;
-  font-weight: 620;
-  font-variation-settings: "wdth" 118;
-}
-.pairs__list {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.pairs__item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-}
-.pairs__img {
-  aspect-ratio: 1000 / 1300;
-  display: grid;
-  place-items: center;
-  padding: 10%;
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--color-noc-2) 70%, #e6dccb);
-  transition: background 0.3s;
-}
-.pairs__item:hover .pairs__img {
-  background: color-mix(in srgb, var(--color-noc-2) 40%, #e0d3bd);
-}
-.pairs__img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.pairs__name {
-  font-weight: 620;
-  font-variation-settings: "wdth" 108;
-  font-size: 13px;
-}
-.pairs__price {
-  color: var(--color-siva);
-}
-
-/* hero: zakrpa i odbrojavanje */
-.hero__copy .patch {
-  margin-bottom: 22px;
-}
-.hero__ambient {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-end;
-}
-@media (max-width: 767px) {
-  .hero__ambient {
-    align-items: flex-start;
-  }
-}
-.countdown {
-  font-size: 13px;
-  font-weight: 560;
-  font-variation-settings: "wdth" 112;
-  color: var(--color-kost);
-}
-
-/* lookbook */
-.lookbook {
-  position: relative;
-  background: var(--color-noc);
-}
-.lookbook__inner {
-  padding: 88px 16px 96px;
-}
-@media (min-width: 768px) {
-  .lookbook__inner {
-    padding: 120px 40px 128px;
-  }
-}
-.lookbook__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px 40px;
-}
-.lookbook__title {
-  font-size: clamp(56px, 8vw, 128px);
-}
-.lookbook__lede {
-  max-width: 36ch;
-  color: var(--color-kost-2);
-  line-height: 1.5;
-}
-.lookbook__grid {
-  margin-top: 48px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  gap: 28px;
-}
-.look {
-  display: flex;
-  flex-direction: column;
-  background: var(--color-noc-2);
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 1px 0 rgb(29 27 24 / 0.06), 0 20px 50px rgb(29 27 24 / 0.07);
-}
-.look__board {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  background:
-    radial-gradient(rgb(29 27 24 / 0.05) 1px, transparent 1.2px) 0 0 / 5px 5px,
-    linear-gradient(170deg, #ece3d4, #e2d6c3);
-  overflow: hidden;
-}
-.look__board img {
-  position: absolute;
-  height: auto;
-  filter: drop-shadow(0 14px 16px rgb(60 40 20 / 0.22)) drop-shadow(0 2px 3px rgb(60 40 20 / 0.2));
-  transition: transform 0.6s var(--ease-teska);
-}
-.look:hover .look__board img:last-child {
-  transform: translateY(-6px) rotate(-1deg) !important;
-}
-.look__body {
-  padding: 20px 22px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.look__name {
-  font-size: 26px;
-  font-weight: 760;
-  font-variation-settings: "wdth" 70;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-.look__note {
-  color: var(--color-kost-2);
-  font-size: 14px;
-  line-height: 1.5;
-}
-.look__items {
-  margin-top: 4px;
-  border-top: 1px solid var(--color-linija);
-  font-size: 14px;
-}
-.look__items li {
-  display: flex;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--color-linija);
-}
-.look__items a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.look__total {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 620;
-}
-.look__add {
-  margin-top: 4px;
-}
-.look__hint {
-  font-size: 12px;
-  color: var(--color-siva);
-}
-
-/* podnožje */
-html:not([data-tema="noc"]) .site-footer {
-  position: relative;
-  padding-top: 88px;
-  border-top: 0;
-  grid-template-columns: 1fr;
-  gap: 48px;
-}
-@media (min-width: 900px) {
-  html:not([data-tema="noc"]) .site-footer {
-    grid-template-columns: 1.1fr 1fr 0.8fr;
-    align-items: start;
-  }
-}
-.site-footer__edge {
-  position: absolute;
-  inset: 0 0 auto 0;
-}
-.site-footer__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-}
-.site-footer__mark {
-  height: 64px;
-  width: auto;
-  overflow: visible;
-}
-.site-footer__claim {
-  font-size: clamp(36px, 4vw, 56px);
-}
-.drop-signup {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 420px;
-}
-.drop-signup__title {
-  font-size: 24px;
-  font-weight: 760;
-  font-variation-settings: "wdth" 70;
-}
-.drop-signup__row {
-  display: flex;
-  gap: 8px;
-}
-.drop-signup input {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--color-linija);
-  background: var(--color-noc-2);
-  border-radius: 3px;
-  padding: 12px 14px;
-  font-size: 15px;
-}
-.drop-signup input:focus {
-  outline: 1.5px solid var(--color-nit);
-}
-.drop-signup__ok {
-  font-size: 14px;
-  color: var(--color-nit);
-}
-.drop-signup__note {
-  font-size: 11px;
-  color: var(--color-siva);
-}
-
-/* korpa */
-.cart__name {
-  font-size: 18px;
-  font-weight: 700;
-  font-variation-settings: "wdth" 80;
-  line-height: 1.1;
-}
-.cart__size {
-  border: 1px solid var(--color-linija);
-  border-radius: 3px;
-  padding: 1px 4px;
-  background: var(--color-noc-2);
-  font-size: 13px;
-}
-
-html:not([data-tema="noc"]) .collection--rail .collection__title {
-  font-size: clamp(40px, 4.4vw, 64px);
-}
-.countdown {
-  white-space: nowrap;
-}
-.hero__ambient {
-  max-width: none;
-}
-
-@media (max-width: 767px) {
-  .site-header nav {
-    gap: 12px;
-  }
-  .select-wrap select {
-    max-width: 96px;
-    font-size: 12px;
-  }
-  .product__stage-hint {
-    display: none;
-  }
 }
